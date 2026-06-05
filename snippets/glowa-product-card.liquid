@@ -1,0 +1,265 @@
+{% doc %}
+  Renders the custom Glowa landing-page product card.
+
+  @param {product} product - Shopify product object
+  @param {string} [badge_text] - Optional badge label
+{% enddoc %}
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign product_form_id = 'GlowaCardForm-' | append: section.id | append: '-' | append: product.id
+  assign review_rating = blank
+  assign review_count = blank
+  assign short_description = product.metafields.custom.short_description.value
+
+  if product.metafields.reviews.rating.value != blank
+    assign review_rating = product.metafields.reviews.rating.value.rating
+    assign review_count = product.metafields.reviews.rating_count
+  endif
+
+  if short_description == blank
+    assign short_description = product.description | strip_html | truncatewords: 4, ''
+  endif
+-%}
+
+<article class="glowa-product-card">
+  <div class="glowa-product-card__media-wrap">
+    {% if badge_text != blank %}
+      <span class="glowa-product-card__badge">{{ badge_text }}</span>
+    {% endif %}
+    <button class="glowa-product-card__wishlist" type="button" aria-label="Wishlist">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 20.25c-.21 0-.42-.08-.58-.23l-6.1-5.86a4.58 4.58 0 0 1 0-6.63 4.92 4.92 0 0 1 6.82 0l.36.35.36-.35a4.92 4.92 0 0 1 6.82 0 4.58 4.58 0 0 1 0 6.63l-6.1 5.86a.84.84 0 0 1-.58.23ZM8.73 7.1c-.96 0-1.92.35-2.65 1.05a3.45 3.45 0 0 0 0 4.99L12 18.79l5.92-5.66a3.45 3.45 0 0 0 0-4.99 3.82 3.82 0 0 0-5.3 0l-.94.89a.84.84 0 0 1-1.16 0l-.94-.9A3.83 3.83 0 0 0 8.73 7.1Z" fill="currentColor"/>
+      </svg>
+    </button>
+    <a href="{{ product.url }}" class="glowa-product-card__media" aria-label="{{ product.title | escape }}">
+      {% if product.featured_media %}
+        {{
+          product.featured_media
+          | image_url: width: 900
+          | image_tag:
+            loading: 'lazy',
+            widths: '320, 480, 640, 900',
+            sizes: '(min-width: 1100px) 19vw, (min-width: 750px) 40vw, 84vw',
+            alt: product.featured_media.alt | default: product.title
+        }}
+      {% else %}
+        {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endif %}
+    </a>
+  </div>
+
+  <div class="glowa-product-card__body">
+    <h3 class="glowa-product-card__title">
+      <a href="{{ product.url }}">{{ product.title | escape }}</a>
+    </h3>
+
+    {% if review_rating != blank %}
+      <div class="glowa-product-card__rating">
+        <span class="glowa-product-card__stars">
+          {%- assign full_stars = review_rating | floor -%}
+          {%- for i in (1..5) -%}
+            <span class="{% if i <= full_stars %}is-filled{% endif %}">★</span>
+          {%- endfor -%}
+        </span>
+        <span class="glowa-product-card__rating-text">
+          {{ review_rating }}{% if review_count != blank %} ({{ review_count }}){% endif %}
+        </span>
+      </div>
+    {% endif %}
+
+    {% if short_description != blank %}
+      <p class="glowa-product-card__description">{{ short_description }}</p>
+    {% endif %}
+
+    <div class="glowa-product-card__meta">
+      <div class="glowa-product-card__price">
+        {% render 'price', product: product, use_variant: true, show_badges: false %}
+      </div>
+      <div class="glowa-product-card__variants">
+        {%- for variant in product.variants limit: 2 -%}
+          {% unless variant.title == 'Default Title' %}
+            <span class="{% if forloop.first %}is-primary{% endif %}">{{ variant.title }}</span>
+          {% endunless %}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {% form 'product', product, id: product_form_id, class: 'glowa-product-card__form' %}
+      <input type="hidden" name="id" value="{{ current_variant.id }}">
+      <button
+        type="submit"
+        name="add"
+        class="glowa-product-card__button"
+        {% unless current_variant.available %}
+          disabled
+        {% endunless %}
+      >
+        {% if current_variant.available %}
+          Add To Cart
+        {% else %}
+          Sold Out
+        {% endif %}
+      </button>
+    {% endform %}
+  </div>
+</article>
+
+{%- style -%}
+  .glowa-product-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+  }
+
+  .glowa-product-card__media-wrap {
+    position: relative;
+  }
+
+  .glowa-product-card__badge {
+    position: absolute;
+    top: 1.4rem;
+    left: 1.4rem;
+    z-index: 2;
+    padding: 0.5rem 1rem;
+    border-radius: 0.6rem;
+    background: rgba(255, 255, 255, 0.9);
+    color: #22201d;
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+
+  .glowa-product-card__wishlist {
+    position: absolute;
+    top: 1.4rem;
+    right: 1.4rem;
+    z-index: 2;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #23201d;
+  }
+
+  .glowa-product-card__wishlist svg {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .glowa-product-card__media {
+    display: block;
+    aspect-ratio: 0.98;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at center, rgba(215, 190, 115, 0.16), transparent 62%),
+      linear-gradient(180deg, #fffdf9 0%, #fff8ef 100%);
+  }
+
+  .glowa-product-card__media img,
+  .glowa-product-card__media svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .glowa-product-card__body {
+    padding-top: 2rem;
+  }
+
+  .glowa-product-card__title {
+    margin: 0 0 1.2rem;
+    font-size: 2rem;
+    line-height: 1.15;
+    color: #2e2925;
+  }
+
+  .glowa-product-card__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .glowa-product-card__rating {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+    color: #2f2926;
+    font-size: 1.2rem;
+  }
+
+  .glowa-product-card__stars {
+    display: inline-flex;
+    gap: 0.1rem;
+    color: #d0d0d0;
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .glowa-product-card__stars .is-filled {
+    color: #d3b441;
+  }
+
+  .glowa-product-card__rating-text {
+    font-size: 1.2rem;
+  }
+
+  .glowa-product-card__description {
+    margin: 0 0 2.2rem;
+    color: #4d443d;
+    font-size: 1.2rem;
+    line-height: 1.4;
+  }
+
+  .glowa-product-card__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    padding-top: 0.8rem;
+    border-top: 0.1rem solid rgba(44, 34, 18, 0.12);
+  }
+
+  .glowa-product-card__price {
+    color: #2f2926;
+    font-family: var(--font-heading-family);
+    font-size: 1.3rem;
+  }
+
+  .glowa-product-card__price .price {
+    margin: 0;
+  }
+
+  .glowa-product-card__variants {
+    display: inline-flex;
+    gap: 1.6rem;
+    align-items: center;
+    color: #51463f;
+    font-family: var(--font-heading-family);
+    font-size: 1.3rem;
+  }
+
+  .glowa-product-card__variants .is-primary {
+    font-weight: 700;
+    color: #2f2926;
+  }
+
+  .glowa-product-card__form {
+    margin-top: 1.8rem;
+  }
+
+  .glowa-product-card__button {
+    width: 100%;
+    min-height: 5.2rem;
+    border: 0.1rem solid #d5b95a;
+    background: transparent;
+    color: #48403a;
+    font-family: var(--font-heading-family);
+    font-size: 1.7rem;
+    cursor: pointer;
+  }
+
+  .glowa-product-card__button[disabled] {
+    opacity: 0.55;
+    cursor: default;
+  }
+{%- endstyle -%}

@@ -1,0 +1,181 @@
+{%- liquid
+  assign products_to_show = section.settings.products_to_show
+  assign source_collection = section.settings.collection
+  if source_collection == blank
+    assign source_collection = collections['all']
+  endif
+  assign product_list = source_collection.products
+-%}
+
+<section class="product-shelf section-{{ section.id }}">
+  <div class="page-width">
+    <div class="product-shelf__header">
+      <div class="product-shelf__titles">
+        <p class="product-shelf__eyebrow">{{ section.settings.eyebrow }}</p>
+        <h2>{{ section.settings.title }}</h2>
+      </div>
+      {% if source_collection != blank and section.settings.show_view_all %}
+        <a class="product-shelf__link" href="{{ source_collection.url }}">{{ section.settings.link_label }}</a>
+      {% endif %}
+    </div>
+
+    <div class="product-shelf__grid">
+      {% if source_collection != blank and product_list.size > 0 %}
+        {% for product in product_list limit: products_to_show %}
+          <div class="product-shelf__item">
+            {% render 'card-product',
+              card_product: product,
+              media_aspect_ratio: 'adapt',
+              show_secondary_image: true,
+              show_vendor: false,
+              show_rating: false,
+              lazy_load: true,
+              section_id: section.id
+            %}
+          </div>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..section.settings.products_to_show) %}
+          <div class="product-shelf__placeholder">
+            {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{%- style -%}
+  .product-shelf {
+    padding: 3.2rem 0 2.4rem;
+    background: #fffdfa;
+  }
+
+  .product-shelf__header {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    align-items: end;
+    margin-bottom: 2.4rem;
+    padding-bottom: 1.6rem;
+    border-bottom: 0.1rem solid rgba(80, 64, 24, 0.12);
+  }
+
+  .product-shelf__eyebrow {
+    margin: 0 0 0.8rem;
+    color: #c4ab4c;
+    font-size: 1.4rem;
+    letter-spacing: 0.18rem;
+    text-transform: uppercase;
+  }
+
+  .product-shelf__header h2 {
+    margin: 0;
+    color: #2b241b;
+    font-size: clamp(3.2rem, 4vw, 5rem);
+    line-height: 1;
+  }
+
+  .product-shelf__link {
+    color: #927a12;
+    text-decoration: none;
+  }
+
+  .product-shelf__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+  }
+
+  .product-shelf__item .card-wrapper {
+    height: 100%;
+  }
+
+  .product-shelf__item .card {
+    height: 100%;
+    border-radius: 2.4rem;
+    overflow: hidden;
+    background: linear-gradient(180deg, #fffdfa 0%, #fff8ef 100%);
+    box-shadow: 0 1.8rem 4rem rgba(87, 69, 24, 0.06);
+  }
+
+  .product-shelf__item .card__inner {
+    background: linear-gradient(180deg, rgba(255, 251, 242, 0.95) 0%, rgba(252, 244, 228, 0.9) 100%);
+  }
+
+  .product-shelf__item .card__content {
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+  }
+
+  .product-shelf__placeholder {
+    min-height: 32rem;
+    border-radius: 2.4rem;
+    background: #faf5ea;
+  }
+
+  @media screen and (min-width: 750px) {
+    .product-shelf__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 2.4rem;
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    .product-shelf__grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Product Shelf",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Curated picks"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Best Sellers"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "If left empty, this section uses all store products automatically."
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show view all link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "View all"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Shelf"
+    }
+  ]
+}
+{% endschema %}

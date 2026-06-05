@@ -1,0 +1,243 @@
+{%- liquid
+  assign featured_collection = section.settings.best_sellers_collection
+  if featured_collection == blank
+    assign featured_collection = collections['all']
+  endif
+
+  assign latest_collection = section.settings.new_releases_collection
+  if latest_collection == blank
+    assign latest_collection = collections['all']
+  endif
+
+  assign featured_count = featured_collection.all_products_count
+  if featured_count == blank or featured_count == 0
+    assign featured_count = section.settings.products_to_show
+  endif
+
+  assign latest_count = latest_collection.all_products_count
+  if latest_count == blank or latest_count == 0
+    assign latest_count = section.settings.products_to_show
+  endif
+-%}
+
+<section class="tabbed-product-showcase section-{{ section.id }}" data-product-tabs>
+  <div class="page-width">
+    <div class="tabbed-product-showcase__tabs" role="tablist" aria-label="Product sections">
+      <button
+        class="tabbed-product-showcase__tab is-active"
+        type="button"
+        role="tab"
+        aria-selected="true"
+        aria-controls="ProductTabPanel-{{ section.id }}-1"
+        id="ProductTab-{{ section.id }}-1"
+        data-target="featured"
+      >
+        <span>{{ section.settings.best_sellers_title }}</span>
+        <sup>{{ featured_count }}</sup>
+      </button>
+      <button
+        class="tabbed-product-showcase__tab"
+        type="button"
+        role="tab"
+        aria-selected="false"
+        aria-controls="ProductTabPanel-{{ section.id }}-2"
+        id="ProductTab-{{ section.id }}-2"
+        data-target="latest"
+      >
+        <span>{{ section.settings.new_releases_title }}</span>
+        <sup>{{ latest_count }}</sup>
+      </button>
+    </div>
+
+    <div
+      class="tabbed-product-showcase__panel is-active"
+      role="tabpanel"
+      id="ProductTabPanel-{{ section.id }}-1"
+      aria-labelledby="ProductTab-{{ section.id }}-1"
+      data-panel="featured"
+    >
+      <div class="tabbed-product-showcase__grid">
+        {%- for product in featured_collection.products limit: section.settings.products_to_show -%}
+          {% render 'glowa-product-card', product: product, badge_text: section.settings.best_sellers_badge %}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <div
+      class="tabbed-product-showcase__panel"
+      role="tabpanel"
+      id="ProductTabPanel-{{ section.id }}-2"
+      aria-labelledby="ProductTab-{{ section.id }}-2"
+      data-panel="latest"
+      hidden
+    >
+      <div class="tabbed-product-showcase__grid">
+        {%- assign latest_products = latest_collection.products | sort: 'published_at' | reverse -%}
+        {%- for product in latest_products limit: section.settings.products_to_show -%}
+          {% render 'glowa-product-card', product: product, badge_text: section.settings.new_releases_badge %}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.currentScript.closest('[data-product-tabs]');
+      if (!root) return;
+      const tabs = Array.from(root.querySelectorAll('.tabbed-product-showcase__tab'));
+      const panels = Array.from(root.querySelectorAll('.tabbed-product-showcase__panel'));
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const target = tab.dataset.target;
+          tabs.forEach((item) => {
+            const active = item === tab;
+            item.classList.toggle('is-active', active);
+            item.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+          panels.forEach((panel) => {
+            const active = panel.dataset.panel === target;
+            panel.classList.toggle('is-active', active);
+            panel.hidden = !active;
+          });
+        });
+      });
+    })();
+  </script>
+</section>
+
+{%- style -%}
+  .tabbed-product-showcase {
+    padding: 1.6rem 0 4.8rem;
+    background: #fffdfa;
+  }
+
+  .tabbed-product-showcase .page-width {
+    max-width: 176rem;
+  }
+
+  .tabbed-product-showcase__tabs {
+    display: flex;
+    align-items: flex-end;
+    gap: 5.6rem;
+    overflow-x: auto;
+    padding-bottom: 0.6rem;
+    border-bottom: 0.1rem solid rgba(60, 48, 20, 0.12);
+  }
+
+  .tabbed-product-showcase__tab {
+    position: relative;
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0 0 2.4rem;
+    border: 0;
+    background: transparent;
+    color: #332d28;
+    cursor: pointer;
+    font-family: var(--font-heading-family);
+    font-size: clamp(3.2rem, 3vw, 5.4rem);
+    line-height: 1;
+  }
+
+  .tabbed-product-showcase__tab sup {
+    top: 0;
+    color: inherit;
+    font-family: var(--font-heading-family);
+    font-size: 1.8rem;
+    line-height: 1;
+  }
+
+  .tabbed-product-showcase__tab.is-active {
+    color: #c7ae49;
+  }
+
+  .tabbed-product-showcase__tab.is-active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.1rem;
+    height: 0.4rem;
+    background: #d7bd53;
+  }
+
+  .tabbed-product-showcase__panel {
+    padding-top: 3.2rem;
+  }
+
+  .tabbed-product-showcase__grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 2.4rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .tabbed-product-showcase__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (min-width: 1100px) {
+    .tabbed-product-showcase__grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 2.8rem;
+    }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Tabbed Product Showcase",
+  "settings": [
+    {
+      "type": "text",
+      "id": "best_sellers_title",
+      "label": "Best sellers tab title",
+      "default": "Bestsellers"
+    },
+    {
+      "type": "collection",
+      "id": "best_sellers_collection",
+      "label": "Best sellers collection"
+    },
+    {
+      "type": "text",
+      "id": "best_sellers_badge",
+      "label": "Best sellers badge",
+      "default": "Bestseller"
+    },
+    {
+      "type": "text",
+      "id": "new_releases_title",
+      "label": "New releases tab title",
+      "default": "New Releases"
+    },
+    {
+      "type": "collection",
+      "id": "new_releases_collection",
+      "label": "New releases collection"
+    },
+    {
+      "type": "text",
+      "id": "new_releases_badge",
+      "label": "New releases badge",
+      "default": "New"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tabbed Product Showcase"
+    }
+  ]
+}
+{% endschema %}

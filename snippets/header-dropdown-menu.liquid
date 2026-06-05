@@ -1,0 +1,47 @@
+{% comment %}
+  Renders a standard dropdown style menu for the header.
+
+  Usage:
+  {% render 'header-dropdown-menu' %}
+{% endcomment %}
+
+<nav class="header__inline-menu">
+  <ul class="list-menu list-menu--inline" role="list">
+    <li>
+      <a
+        id="HeaderMenu-home"
+        href="{{ routes.root_url }}"
+        class="header__menu-item list-menu__item link link--text focus-inset"
+        {% if request.page_type == 'index' %}
+          aria-current="page"
+        {% endif %}
+      >
+        <span{% if request.page_type == 'index' %} class="header__active-menu-item"{% endif %}>Home</span>
+      </a>
+    </li>
+    <li>
+      <a
+        id="HeaderMenu-catalog"
+        href="{{ routes.all_products_collection_url }}"
+        class="header__menu-item list-menu__item link link--text focus-inset"
+        {% if request.path contains '/collections' %}
+          aria-current="page"
+        {% endif %}
+      >
+        <span{% if request.path contains '/collections' %} class="header__active-menu-item"{% endif %}>Catalog</span>
+      </a>
+    </li>
+    <li>
+      <a
+        id="HeaderMenu-contact"
+        href="/pages/contact"
+        class="header__menu-item list-menu__item link link--text focus-inset"
+        {% if request.path contains '/pages/contact' %}
+          aria-current="page"
+        {% endif %}
+      >
+        <span{% if request.path contains '/pages/contact' %} class="header__active-menu-item"{% endif %}>Contact</span>
+      </a>
+    </li>
+  </ul>
+</nav>

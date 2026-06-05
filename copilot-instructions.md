@@ -1,0 +1,1 @@
+/Users/mi6/Desktop/me/glowa/glowa-theme/AGENTS.md

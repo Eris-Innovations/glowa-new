@@ -1,0 +1,229 @@
+{
+  "sections": {
+    "hero_banner": {
+      "type": "hero-banner",
+      "settings": {
+        "eyebrow": "Blend beauty in you",
+        "heading": "Get the skin you want to feel",
+        "subheading": "A soft, editorial homepage inspired by the provided Glowa landing page references.",
+        "button_text": "Shop Now",
+        "button_link": "shopify://collections/all"
+      }
+    },
+    "product_tabs": {
+      "type": "tabbed-product-showcase",
+      "settings": {
+        "best_sellers_title": "Bestsellers",
+        "best_sellers_collection": "",
+        "best_sellers_badge": "Bestseller",
+        "new_releases_title": "New Releases",
+        "new_releases_collection": "",
+        "new_releases_badge": "Bestseller",
+        "products_to_show": 5
+      }
+    },
+    "common_concerns": {
+      "type": "common-concerns",
+      "blocks": {
+        "concern_1": {
+          "type": "concern",
+          "settings": {
+            "title": "Aging"
+          }
+        },
+        "concern_2": {
+          "type": "concern",
+          "settings": {
+            "title": "Congestion"
+          }
+        },
+        "concern_3": {
+          "type": "concern",
+          "settings": {
+            "title": "Texture"
+          }
+        },
+        "concern_4": {
+          "type": "concern",
+          "settings": {
+            "title": "Redness"
+          }
+        },
+        "concern_5": {
+          "type": "concern",
+          "settings": {
+            "title": "Dryness"
+          }
+        }
+      },
+      "block_order": [
+        "concern_1",
+        "concern_2",
+        "concern_3",
+        "concern_4",
+        "concern_5"
+      ],
+      "settings": {
+        "heading": "Common Concerns",
+        "text": "<p>Not sure where to start? Add the concern imagery and route customers into the right routine.</p>"
+      }
+    },
+    "best_seller_banner": {
+      "type": "best-seller-banner",
+      "settings": {
+        "heading": "Our Best Sellers",
+        "button_text": "Shop Now",
+        "button_link": "shopify://collections/all"
+      }
+    },
+    "testimonials": {
+      "type": "testimonials-showcase",
+      "blocks": {
+        "testimonial_1": {
+          "type": "testimonial",
+          "settings": {
+            "card_style": "image",
+            "name": "Customer 1",
+            "role": "Verified Customer",
+            "rating": 5,
+            "quote": "<p></p>",
+            "product_name": "",
+            "product_price": ""
+          }
+        },
+        "testimonial_2": {
+          "type": "testimonial",
+          "settings": {
+            "card_style": "review",
+            "name": "Mia D",
+            "role": "Verified Customer",
+            "rating": 5,
+            "quote": "<p>Each Puff product is meticulously crafted and designed to unveil your most radiant self.</p>",
+            "product_name": "Cream",
+            "product_price": "$60.00"
+          }
+        },
+        "testimonial_3": {
+          "type": "testimonial",
+          "settings": {
+            "card_style": "image",
+            "name": "Customer 2",
+            "role": "Verified Customer",
+            "rating": 5,
+            "quote": "<p></p>",
+            "product_name": "",
+            "product_price": ""
+          }
+        },
+        "testimonial_4": {
+          "type": "testimonial",
+          "settings": {
+            "card_style": "review",
+            "name": "Mia D",
+            "role": "Verified Customer",
+            "rating": 5,
+            "quote": "<p>Because you deserve to be pampered, cherished, and absolutely radiant.</p>",
+            "product_name": "Glow Serum",
+            "product_price": "$60.00"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_1",
+        "testimonial_2",
+        "testimonial_3",
+        "testimonial_4"
+      ],
+      "settings": {
+        "heading": "Customers love us."
+      }
+    },
+    "faq_spotlight": {
+      "type": "faq-spotlight",
+      "blocks": {
+        "faq_1": {
+          "type": "faq",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "<p>Shipping usually takes 3-7 business days depending on your location.</p>"
+          }
+        },
+        "faq_2": {
+          "type": "faq",
+          "settings": {
+            "question": "Does my piece come in any packaging?",
+            "answer": "<p>Yes. Orders are packed carefully with protective wrapping and branded touches.</p>"
+          }
+        },
+        "faq_3": {
+          "type": "faq",
+          "settings": {
+            "question": "Do you ship internationally?",
+            "answer": "<p>Yes. International availability depends on the destination and carrier coverage.</p>"
+          }
+        },
+        "faq_4": {
+          "type": "faq",
+          "settings": {
+            "question": "What payment methods do you accept?",
+            "answer": "<p>You can accept major cards and any additional payment methods enabled in Shopify Payments.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3",
+        "faq_4"
+      ],
+      "settings": {
+        "heading": "We're answerable!",
+        "text": "<p>We create safe products that really work and are designed to make people feel good. Add support copy here for the final landing-page section.</p>",
+        "button_text": "See More Answers",
+        "button_link": "/pages/contact"
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Subscribe to get 10% OFF",
+            "heading_size": "h1"
+          }
+        },
+        "paragraph": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>Subscribe for store updates and discounts.</p>"
+          }
+        },
+        "email_form": {
+          "type": "email_form",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "paragraph",
+        "email_form"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    }
+  },
+  "order": [
+    "hero_banner",
+    "product_tabs",
+    "common_concerns",
+    "best_seller_banner",
+    "testimonials",
+    "faq_spotlight",
+    "newsletter"
+  ]
+}

@@ -1,0 +1,143 @@
+<section class="common-concerns section-{{ section.id }}">
+  <div class="page-width">
+    <div class="common-concerns__header">
+      <h2>{{ section.settings.heading }}</h2>
+      <div class="common-concerns__text rte">{{ section.settings.text }}</div>
+    </div>
+
+    <div class="common-concerns__grid">
+      {% for block in section.blocks %}
+        <article class="common-concerns__card" {{ block.shopify_attributes }}>
+          <div class="common-concerns__image">
+            {% if block.settings.image %}
+              {{
+                block.settings.image
+                | image_url: width: 900
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '300, 450, 600, 900',
+                  sizes: '(min-width: 990px) 18vw, (min-width: 750px) 30vw, 70vw',
+                  alt: block.settings.title
+              }}
+            {% else %}
+              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+          </div>
+          <h3>{{ block.settings.title }}</h3>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{%- style -%}
+  .common-concerns {
+    padding: 5.6rem 0;
+    background: #ffffff;
+  }
+
+  .common-concerns__header {
+    margin-bottom: 3.2rem;
+  }
+
+  .common-concerns__header h2 {
+    margin: 0 0 1.2rem;
+    color: #c4ab4c;
+    font-size: clamp(3.2rem, 4vw, 5.6rem);
+    line-height: 1;
+  }
+
+  .common-concerns__text {
+    max-width: 62rem;
+    color: rgba(44, 35, 17, 0.78);
+  }
+
+  .common-concerns__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+  }
+
+  .common-concerns__card {
+    margin: 0;
+  }
+
+  .common-concerns__image {
+    aspect-ratio: 1 / 1;
+    border-radius: 1.6rem;
+    overflow: hidden;
+    background: #f7f2e8;
+  }
+
+  .common-concerns__image img,
+  .common-concerns__image svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .common-concerns__card h3 {
+    margin: 1.4rem 0 0;
+    text-align: center;
+    color: #2b241b;
+    font-size: 2rem;
+  }
+
+  @media screen and (min-width: 990px) {
+    .common-concerns__grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 3.6rem;
+    }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Common Concerns",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Common Concerns"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Not sure where to start? Use this section to guide customers into the right routine.</p>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "concern",
+      "name": "Concern",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Dryness"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Common Concerns",
+      "blocks": [
+        { "type": "concern" },
+        { "type": "concern" },
+        { "type": "concern" },
+        { "type": "concern" },
+        { "type": "concern" }
+      ]
+    }
+  ]
+}
+{% endschema %}
