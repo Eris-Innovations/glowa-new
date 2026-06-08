@@ -1,0 +1,253 @@
+{%- comment -%}
+  GLOWA — Testimonials carousel.
+  Heading with a colored accent + nav arrows.
+  Each testimonial = portrait photo + review card (avatar, name, stars,
+  body copy, product chip).  Placeholders shown when blocks have no images.
+{%- endcomment -%}
+
+{%- liquid
+  assign accent_color = section.settings.accent_color | default: '#B8960C'
+-%}
+
+<section
+  class="glowa-scope glowa-testimonials"
+  data-glowa-carousel
+  style="--glowa-testimonial-accent: {{ accent_color }};"
+>
+  <div class="glowa-container">
+
+    <header class="glowa-testimonials__header glowa-reveal">
+      <h2 class="glowa-testimonials__heading">
+        <span class="glowa-testimonials__heading-accent">{{ section.settings.heading_accent | default: 'Customers' }}</span>
+        <span class="glowa-testimonials__heading-text">{{ section.settings.heading_text | default: ' love us.' }}</span>
+      </h2>
+
+      <div class="glowa-testimonials__nav">
+        <button type="button" class="glowa-testimonials__nav-btn" data-glowa-carousel-prev aria-label="Previous testimonials">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <polyline points="15 6 9 12 15 18"></polyline>
+          </svg>
+        </button>
+        <button type="button" class="glowa-testimonials__nav-btn" data-glowa-carousel-next aria-label="Next testimonials">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <polyline points="9 6 15 12 9 18"></polyline>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="glowa-testimonials__track" data-glowa-carousel-track>
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'testimonial' -%}
+          {%- assign rating = block.settings.rating | default: 5 | at_most: 5 | at_least: 0 -%}
+          <article class="glowa-testimonial glowa-reveal" {{ block.shopify_attributes }}>
+            <div class="glowa-testimonial__photo">
+              {%- if block.settings.photo != blank -%}
+                {{ block.settings.photo | image_url: width: 800 | image_tag:
+                    loading: 'lazy',
+                    widths: '400,600,800',
+                    sizes: '(max-width: 768px) 80vw, 22vw',
+                    alt: block.settings.name
+                }}
+              {%- else -%}
+                <svg class="glowa-testimonial__placeholder" viewBox="0 0 200 280" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                  <rect width="200" height="280" fill="var(--color-bg)"/>
+                  <circle cx="100" cy="105" r="38" fill="rgba(184, 150, 12, 0.18)"/>
+                  <path d="M40 280 Q40 200 100 200 Q160 200 160 280 Z" fill="rgba(184, 150, 12, 0.18)"/>
+                  <text x="100" y="270" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="14" font-style="italic" fill="rgba(107, 100, 40, 0.55)">{{ block.settings.name | slice: 0 | upcase }}</text>
+                </svg>
+              {%- endif -%}
+            </div>
+
+            <div class="glowa-testimonial__card">
+              <div class="glowa-testimonial__avatar-row">
+                <span class="glowa-testimonial__avatar">
+                  {%- if block.settings.avatar != blank -%}
+                    {{ block.settings.avatar | image_url: width: 80 | image_tag:
+                        loading: 'lazy',
+                        widths: '40,80',
+                        alt: block.settings.name
+                    }}
+                  {%- else -%}
+                    <svg viewBox="0 0 40 40" aria-hidden="true">
+                      <circle cx="20" cy="20" r="20" fill="var(--color-bg)"/>
+                      <circle cx="20" cy="16" r="7" fill="rgba(184, 150, 12, 0.35)"/>
+                      <path d="M6 40 Q6 26 20 26 Q34 26 34 40 Z" fill="rgba(184, 150, 12, 0.35)"/>
+                    </svg>
+                  {%- endif -%}
+                </span>
+                <span class="glowa-testimonial__meta">
+                  <span class="glowa-testimonial__name">{{ block.settings.name | default: 'Mia D' }}</span>
+                  <span class="glowa-testimonial__verified">{{ block.settings.label | default: 'Verified Customer' }}</span>
+                </span>
+              </div>
+
+              <div class="glowa-testimonial__stars" aria-label="Rated {{ rating }} out of 5">
+                {%- for i in (1..5) -%}
+                  {%- if i <= rating -%}
+                    <span class="glowa-testimonial__star is-filled" aria-hidden="true">★</span>
+                  {%- else -%}
+                    <span class="glowa-testimonial__star" aria-hidden="true">★</span>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+
+              <p class="glowa-testimonial__text">{{ block.settings.body }}</p>
+
+              {%- if block.settings.product_name != blank -%}
+                <div class="glowa-testimonial__product">
+                  <span class="glowa-testimonial__product-icon" aria-hidden="true">
+                    {%- if block.settings.product_image != blank -%}
+                      {{ block.settings.product_image | image_url: width: 100 | image_tag:
+                          loading: 'lazy', widths: '50,100', alt: block.settings.product_name
+                      }}
+                    {%- else -%}
+                      <svg viewBox="0 0 40 40" aria-hidden="true">
+                        <rect x="10" y="14" width="20" height="22" rx="2" fill="#FFFFFF" stroke="rgba(0,0,0,0.12)" stroke-width="1"/>
+                        <rect x="14" y="10" width="12" height="6"  rx="1" fill="#EBE3D2"/>
+                        <rect x="12" y="20" width="16" height="3"  rx="1" fill="#EBE3D2"/>
+                      </svg>
+                    {%- endif -%}
+                  </span>
+                  <span class="glowa-testimonial__product-meta">
+                    <span class="glowa-testimonial__product-name">{{ block.settings.product_name }}</span>
+                    <span class="glowa-testimonial__product-price">{{ block.settings.product_price | default: '$60.00' }}</span>
+                  </span>
+                </div>
+              {%- endif -%}
+            </div>
+          </article>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "tag": "section",
+  "class": "glowa-section-testimonials",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Heading — accent word",
+      "default": "Customers"
+    },
+    {
+      "type": "text",
+      "id": "heading_text",
+      "label": "Heading — rest",
+      "default": " love us."
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#B8960C"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Customer name",
+          "default": "Mia D"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Customer label",
+          "default": "Verified Customer"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Star rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 4
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Review body",
+          "default": "Each Puff product is meticulously crafted, infused with the finest botanicals and scientifically-backed actives, all working in harmony to unveil your most radiant self. Embrace the Puff experience, and discover the art of beautiful self-love. Because you deserve to be pampered, cherished, and absolutely radiant."
+        },
+        {
+          "type": "image_picker",
+          "id": "photo",
+          "label": "Portrait photo (optional)"
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar",
+          "label": "Small avatar (optional)"
+        },
+        {
+          "type": "header",
+          "content": "Product chip"
+        },
+        {
+          "type": "text",
+          "id": "product_name",
+          "label": "Product name",
+          "default": "Cream"
+        },
+        {
+          "type": "text",
+          "id": "product_price",
+          "label": "Product price",
+          "default": "$60.00"
+        },
+        {
+          "type": "image_picker",
+          "id": "product_image",
+          "label": "Product image (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "GLOWA Testimonials",
+      "settings": {
+        "heading_accent": "Customers",
+        "heading_text": " love us.",
+        "accent_color": "#B8960C"
+      },
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "name": "Mia D",
+            "label": "Verified Customer",
+            "rating": 4,
+            "product_name": "Cream",
+            "product_price": "$60.00"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "name": "Mia D",
+            "label": "Verified Customer",
+            "rating": 4,
+            "product_name": "Glow Serum",
+            "product_price": "$60.00"
+          }
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": ["index", "page", "collection"]
+  }
+}
+{% endschema %}

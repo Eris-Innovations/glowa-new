@@ -1,0 +1,43 @@
+{
+  "sections": {
+    "product-main": {
+      "type": "product-main",
+      "blocks": {
+        "trust-shipping": {
+          "type": "trust",
+          "settings": { "icon": "truck",   "text": "Orders over $50 ship free" }
+        },
+        "trust-returns": {
+          "type": "trust",
+          "settings": { "icon": "returns", "text": "30 day returns" }
+        },
+        "feature-shipping":  { "type": "feature", "settings": { "text": "Free Shipping" } },
+        "feature-guarantee": { "type": "feature", "settings": { "text": "Money Guarantee" } },
+        "feature-payment":   { "type": "feature", "settings": { "text": "Flexible Payment" } },
+        "feature-support":   { "type": "feature", "settings": { "text": "Online Support" } },
+        "feature-returns":   { "type": "feature", "settings": { "text": "Return within 7 days" } }
+      },
+      "block_order": [
+        "trust-shipping",
+        "trust-returns",
+        "feature-shipping",
+        "feature-guarantee",
+        "feature-payment",
+        "feature-support",
+        "feature-returns"
+      ],
+      "settings": {
+        "show_badge": true,
+        "badge_text": "Selling fast!",
+        "badge_color": "#FF6B8A",
+        "shipping_text": "Shipping calculated at checkout.",
+        "description": "Whether organic, natural, or allergy-conscious, every serum, moisturizer, or treatment is clinically effective for every kind of clean beauty routine.",
+        "review_count": 3,
+        "fallback_price": "$79.00",
+        "urgency_text": "Hurry up, only [count] items left in stock.",
+        "stock_threshold": 10
+      }
+    }
+  },
+  "order": ["product-main"]
+}

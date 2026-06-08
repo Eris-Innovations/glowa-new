@@ -1,0 +1,219 @@
+{%- comment -%}
+  GLOWA — Hero section.
+  Full-width image with overlay copy positioned in the negative space.
+  Falls back to the bundled `glowa-hero.png` if no image is set.
+{%- endcomment -%}
+
+{%- liquid
+  assign image = section.settings.image
+  assign content_position = section.settings.content_position | default: 'left'
+  assign overlay_opacity = section.settings.overlay_opacity | default: 0
+  assign accent_color = section.settings.accent_color | default: '#6B6428'
+-%}
+
+<section
+  class="glowa-scope glowa-hero glowa-hero--{{ content_position }}"
+  style="
+    --glowa-hero-min-height: {{ section.settings.min_height | default: 420 }}px;
+    --glowa-hero-overlay: rgba(0, 0, 0, {{ overlay_opacity | divided_by: 100.0 }});
+    --glowa-hero-accent: {{ accent_color }};
+    {% if section.settings.background_color != blank %}background: {{ section.settings.background_color }};{% endif %}
+    {% if section.settings.text_color != blank %}--glowa-hero-text: {{ section.settings.text_color }};{% endif %}
+  "
+>
+  <div class="glowa-hero__media" aria-hidden="true">
+    {%- if image != blank -%}
+      {{ image | image_url: width: 2400 | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          widths: '600,900,1200,1600,2000,2400',
+          sizes: '100vw',
+          alt: section.settings.heading | default: 'GLOWA hero',
+          class: 'glowa-hero__img'
+      }}
+    {%- else -%}
+      <img
+        src="{{ 'glowa-hero.png' | asset_url }}"
+        alt="{{ section.settings.heading | default: 'GLOWA hero' | escape }}"
+        class="glowa-hero__img"
+        loading="eager"
+        fetchpriority="high"
+        width="2400"
+        height="1220"
+      >
+    {%- endif -%}
+    <span class="glowa-hero__overlay"></span>
+  </div>
+
+  <div class="glowa-container glowa-hero__container">
+    <div class="glowa-hero__content glowa-reveal">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="glowa-hero__eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h1 class="glowa-hero__heading">{{ section.settings.heading }}</h1>
+      {%- endif -%}
+
+      {%- if section.settings.subheading != blank -%}
+        <p class="glowa-hero__subheading">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <a
+          href="{{ section.settings.button_link | default: '#' }}"
+          class="glowa-hero__cta"
+        >
+          {{ section.settings.button_label }}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.button_secondary_label != blank -%}
+        <a
+          href="{{ section.settings.button_secondary_link | default: '#' }}"
+          class="glowa-hero__cta glowa-hero__cta--ghost"
+        >
+          {{ section.settings.button_secondary_label }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "section",
+  "class": "glowa-section-hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "info": "Recommended: 2400×1200, JPG/PNG. Leave empty to use bundled assets/glowa-hero.png."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color (visible if image has transparency)",
+      "default": "#F5F0EA"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Dark overlay",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Minimum height",
+      "min": 320,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 420
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Content position",
+      "options": [
+        { "value": "left",   "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Heading & button color",
+      "default": "#6B6428"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Blend beauty in you"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get the skin you want to feel"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading (optional)"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Primary button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "button_secondary_label",
+      "label": "Secondary button label (optional)"
+    },
+    {
+      "type": "url",
+      "id": "button_secondary_link",
+      "label": "Secondary button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "GLOWA Hero",
+      "settings": {
+        "min_height": 420,
+        "overlay_opacity": 0,
+        "content_position": "left",
+        "background_color": "#F5F0EA",
+        "text_color": "#1A1A1A",
+        "accent_color": "#6B6428",
+        "eyebrow": "Blend beauty in you",
+        "heading": "Get the skin you want to feel",
+        "button_label": "Shop Now"
+      }
+    }
+  ],
+  "enabled_on": {
+    "templates": ["index", "page", "collection"]
+  }
+}
+{% endschema %}

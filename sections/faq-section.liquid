@@ -1,0 +1,204 @@
+{%- comment -%}
+  GLOWA — FAQ section.
+  Three columns: copy, product image, accordion.
+{%- endcomment -%}
+
+<section class="glowa-scope glowa-faq">
+  <div class="glowa-container">
+    <div class="glowa-faq__grid">
+
+      <div class="glowa-faq__col glowa-faq__col--copy glowa-reveal">
+        <h2 class="glowa-faq__heading">{{ section.settings.heading | default: "We're answerable!" }}</h2>
+        <p class="glowa-faq__body">
+          {{- section.settings.subtext -}}
+        </p>
+        <div class="glowa-faq__links">
+          {%- if section.settings.help_label != blank -%}
+            <a href="{{ section.settings.help_url | default: '#' }}">{{ section.settings.help_label }}</a>
+          {%- endif -%}
+          {%- if section.settings.contact_label != blank -%}
+            <a href="{{ section.settings.contact_url | default: '/pages/contact' }}">{{ section.settings.contact_label }}</a>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.cta_label != blank -%}
+          <a href="{{ section.settings.cta_url | default: '#' }}" class="glowa-faq__cta">{{ section.settings.cta_label }}</a>
+        {%- endif -%}
+      </div>
+
+      <div class="glowa-faq__col glowa-faq__media glowa-reveal">
+        {%- if section.settings.image != blank -%}
+          {{ section.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', widths: '200,400,600', alt: 'GLOWA product bottle' }}
+        {%- else -%}
+          {{ 'product-3' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+      </div>
+
+      <div class="glowa-faq__col glowa-faq__col--accordion glowa-reveal">
+        <div class="glowa-accordion">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'faq' -%}
+              {%- assign is_open = false -%}
+              {%- if block.settings.default_open -%}{%- assign is_open = true -%}{%- endif -%}
+              <div
+                class="glowa-accordion__item{% if is_open %} is-open{% endif %}"
+                {{ block.shopify_attributes }}
+              >
+                <button
+                  type="button"
+                  class="glowa-accordion__trigger"
+                  aria-expanded="{{ is_open }}"
+                  aria-controls="faq-panel-{{ block.id }}"
+                  id="faq-trigger-{{ block.id }}"
+                >
+                  <span>{{ block.settings.question }}</span>
+                  <span class="glowa-accordion__icon" aria-hidden="true">{% if is_open %}–{% else %}+{% endif %}</span>
+                </button>
+                <div
+                  class="glowa-accordion__panel"
+                  id="faq-panel-{{ block.id }}"
+                  role="region"
+                  aria-labelledby="faq-trigger-{{ block.id }}"
+                >
+                  <p class="glowa-accordion__answer">{{ block.settings.answer }}</p>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "FAQ section",
+  "tag": "section",
+  "class": "glowa-section-faq",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "We're answerable!"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "<p>We create safe products that really work and are designed to make you feel good. Any question about our products?</p>"
+    },
+    {
+      "type": "text",
+      "id": "help_label",
+      "label": "Help link label",
+      "default": "Check if you can find them here"
+    },
+    {
+      "type": "url",
+      "id": "help_url",
+      "label": "Help link URL"
+    },
+    {
+      "type": "text",
+      "id": "contact_label",
+      "label": "Contact link label",
+      "default": "Contact us"
+    },
+    {
+      "type": "url",
+      "id": "contact_url",
+      "label": "Contact link URL"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA button label",
+      "default": "See More Answers"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA button URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Center image (product bottle)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How long does shipping take?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "Shipping usually takes 3-7 business days, depending on your location. Expedited shipping options are available for faster delivery. Contact us for any specific shipping inquiries."
+        },
+        {
+          "type": "checkbox",
+          "id": "default_open",
+          "label": "Open by default",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "GLOWA FAQ",
+      "settings": {
+        "heading": "We're answerable!",
+        "subtext": "<p>We create safe products that really work and are designed to make you feel good. Any question about our products?</p>",
+        "help_label": "Check if you can find them here",
+        "contact_label": "Contact us",
+        "cta_label": "See More Answers"
+      },
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "Shipping usually takes 3-7 business days, depending on your location. Expedited shipping options are available for faster delivery. Contact us for any specific shipping inquiries.",
+            "default_open": true
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Does my piece come in any packaging?",
+            "answer": "Every GLOWA order is shipped in fully recyclable, signature kraft packaging — designed to look as beautiful as the product inside."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Do you ship internationally?",
+            "answer": "Yes — we ship to over 60 countries. International shipping rates and delivery times are calculated at checkout based on your destination."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What payment methods do you accept?",
+            "answer": "We accept all major credit cards (Visa, Mastercard, American Express, Discover, Diners), PayPal, Apple Pay, Google Pay and Shop Pay."
+          }
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product", "index", "page"]
+  }
+}
+{% endschema %}

@@ -1,0 +1,463 @@
+{%- comment -%}
+  GLOWA — Product main.
+  Single, opinionated product section. Pulls from a selected product reference,
+  or falls back to the current product when rendered on a product template.
+{%- endcomment -%}
+
+{%- liquid
+  assign p = product
+  if section.settings.product != blank
+    assign p = section.settings.product
+  endif
+  assign current_variant = p.selected_or_first_available_variant
+  assign size_option = p.options_with_values.first
+  assign inventory = current_variant.inventory_quantity | default: 0
+  assign show_urgency = false
+  if current_variant.inventory_management != blank and inventory > 0 and inventory <= section.settings.stock_threshold
+    assign show_urgency = true
+  endif
+-%}
+
+<section class="glowa-scope glowa-product" data-glowa-product>
+  <div class="glowa-container">
+    <div class="glowa-product__grid">
+
+      <div class="glowa-product__media glowa-reveal">
+        {%- if p.featured_image != blank -%}
+          <img
+            src="{{ p.featured_image | image_url: width: 1200 }}"
+            alt="{{ p.featured_image.alt | escape | default: p.title }}"
+            width="1200"
+            height="{{ 1200 | divided_by: p.featured_image.aspect_ratio }}"
+            loading="eager"
+          >
+        {%- else -%}
+          <svg
+            class="glowa-product__placeholder"
+            viewBox="0 0 600 600"
+            preserveAspectRatio="xMidYMid meet"
+            role="img"
+            aria-label="Dynasty Cream product placeholder"
+          >
+            <defs>
+              <radialGradient id="glowa-jar-bg" cx="50%" cy="48%" r="65%">
+                <stop offset="0%"   stop-color="#F2E9DA"/>
+                <stop offset="65%"  stop-color="#E8DCC4"/>
+                <stop offset="100%" stop-color="#DCCDB1"/>
+              </radialGradient>
+              <linearGradient id="glowa-jar-body" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%"   stop-color="#FAFAFA"/>
+                <stop offset="50%"  stop-color="#FFFFFF"/>
+                <stop offset="100%" stop-color="#ECECEC"/>
+              </linearGradient>
+              <linearGradient id="glowa-jar-lid" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%"   stop-color="#FFFFFF"/>
+                <stop offset="100%" stop-color="#E5E0D6"/>
+              </linearGradient>
+              <radialGradient id="glowa-jar-shadow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%"   stop-color="rgba(0,0,0,0.18)"/>
+                <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+              </radialGradient>
+            </defs>
+
+            <rect width="600" height="600" fill="url(#glowa-jar-bg)"/>
+
+            <ellipse cx="300" cy="495" rx="135" ry="14" fill="url(#glowa-jar-shadow)"/>
+
+            <g>
+              <rect x="200" y="225" width="200" height="80" rx="14" fill="url(#glowa-jar-lid)"/>
+              <ellipse cx="300" cy="225" rx="100" ry="14" fill="#FFFFFF"/>
+              <ellipse cx="300" cy="225" rx="86"  ry="9"  fill="#F4EEE1" opacity="0.55"/>
+
+              <rect x="210" y="305" width="180" height="180" rx="14" fill="url(#glowa-jar-body)"/>
+              <rect x="210" y="305" width="180" height="180" rx="14" fill="none" stroke="rgba(0,0,0,0.06)"/>
+              <rect x="218" y="318" width="10"  height="158" rx="4" fill="rgba(255,255,255,0.85)"/>
+              <rect x="372" y="318" width="6"   height="158" rx="3" fill="rgba(0,0,0,0.04)"/>
+
+              <text x="290" y="358" text-anchor="middle"
+                    font-family="serif" font-size="22"
+                    fill="#1A1A1A" font-weight="600" letter-spacing="2">조선</text>
+              <text x="290" y="382" text-anchor="middle"
+                    font-family="serif" font-size="22"
+                    fill="#1A1A1A" font-weight="600" letter-spacing="2">미녀</text>
+              <circle cx="316" cy="376" r="5" fill="#B83C2A"/>
+
+              <text x="300" y="420" text-anchor="middle"
+                    font-family="Cormorant Garamond, serif" font-size="13"
+                    fill="#1A1A1A" font-weight="500" letter-spacing="0.5">Dynasty Cream</text>
+              <text x="300" y="442" text-anchor="middle"
+                    font-family="Cormorant Garamond, serif" font-size="10"
+                    fill="#666666" font-style="italic" letter-spacing="0.3">Beauty of Joseon</text>
+
+              <rect x="262" y="461" width="76" height="1" fill="rgba(0,0,0,0.18)"/>
+              <text x="300" y="473" text-anchor="middle"
+                    font-family="Arial, sans-serif" font-size="6"
+                    fill="#888" letter-spacing="0.8">DYNASTY CREAM</text>
+            </g>
+
+            <g opacity="0.35" transform="translate(0, 502)">
+              <rect x="200" y="0" width="200" height="60" rx="14" fill="url(#glowa-jar-lid)" transform="scale(1,-1) translate(0,-60)"/>
+              <rect x="210" y="0" width="180" height="60" rx="10" fill="url(#glowa-jar-body)" opacity="0.5"/>
+            </g>
+          </svg>
+        {%- endif -%}
+      </div>
+
+      <div class="glowa-product__info glowa-reveal">
+        {%- if section.settings.show_badge -%}
+          <span class="glowa-badge" style="background: {{ section.settings.badge_color | default: '#FF6B8A' }};">
+            {{ section.settings.badge_text }}
+          </span>
+        {%- endif -%}
+
+        <h1 class="glowa-product__title">{{ p.title | default: 'Dynasty Cream' }}</h1>
+
+        <div class="glowa-product__rating" aria-label="Rated 5 out of 5">
+          <span class="glowa-stars" aria-hidden="true">★★★★★</span>
+          <span>({{ p.metafields.reviews.rating_count.value | default: section.settings.review_count }})</span>
+        </div>
+
+        <div class="glowa-product__price" data-glowa-price>
+          {%- if p != blank -%}
+            {{ current_variant.price | money }}
+          {%- else -%}
+            {{ section.settings.fallback_price | default: '$79.00' }}
+          {%- endif -%}
+        </div>
+
+        <p class="glowa-product__shipping">{{ section.settings.shipping_text }}</p>
+
+        <p class="glowa-product__description">
+          {%- if p.description != blank -%}
+            {{ p.description | strip_html | truncatewords: 50 }}
+          {%- else -%}
+            {{ section.settings.description }}
+          {%- endif -%}
+        </p>
+
+        {%- if show_urgency -%}
+          {%- assign urgency_text = section.settings.urgency_text | replace: '[count]', inventory -%}
+          <p class="glowa-product__urgency">{{ urgency_text }}</p>
+          {%- assign progress = inventory | times: 100 | divided_by: section.settings.stock_threshold | at_most: 100 -%}
+          <div class="glowa-progress" aria-hidden="true">
+            <div class="glowa-progress__fill" style="width: {{ progress }}%;"></div>
+          </div>
+        {%- elsif p == blank -%}
+          {%- assign fallback_urgency = section.settings.urgency_text | replace: '[count]', 4 -%}
+          <p class="glowa-product__urgency">{{ fallback_urgency }}</p>
+          <div class="glowa-progress" aria-hidden="true">
+            <div class="glowa-progress__fill" style="width: 40%;"></div>
+          </div>
+        {%- endif -%}
+
+        <form
+          method="post"
+          action="{{ routes.cart_add_url }}"
+          accept-charset="UTF-8"
+          enctype="multipart/form-data"
+          data-glowa-product-form
+          novalidate
+        >
+          <input type="hidden" name="form_type" value="product">
+          <input type="hidden" name="utf8" value="✓">
+          <input
+            type="hidden"
+            name="id"
+            value="{{ current_variant.id }}"
+            data-glowa-variant-id
+          >
+
+          {%- if size_option != blank -%}
+            <div class="glowa-product__option">
+              <label class="glowa-product__option-label">
+                {{ size_option.name }}:
+                <span class="glowa-product__option-value" data-glowa-size-label>
+                  {{ current_variant.options.first | default: size_option.values.first }}
+                </span>
+              </label>
+              <div class="glowa-size-options" data-glowa-size-group role="group" aria-label="{{ size_option.name }}">
+                {%- for v in p.variants -%}
+                  {%- assign opt_value = v.options.first -%}
+                  <button
+                    type="button"
+                    class="glowa-size-options__button{% if v.id == current_variant.id %} is-active{% endif %}"
+                    data-value="{{ opt_value }}"
+                    data-variant-id="{{ v.id }}"
+                    data-price="{{ v.price | money }}"
+                    data-available="{{ v.available }}"
+                  >
+                    {{ opt_value }}
+                  </button>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- else -%}
+            <div class="glowa-product__option">
+              <label class="glowa-product__option-label">
+                Size:
+                <span class="glowa-product__option-value" data-glowa-size-label>60</span>
+              </label>
+              <div class="glowa-size-options" data-glowa-size-group role="group" aria-label="Size">
+                <button type="button" class="glowa-size-options__button" data-value="70cl">70cl</button>
+                <button type="button" class="glowa-size-options__button is-active" data-value="60ml">60ml</button>
+              </div>
+            </div>
+          {%- endif -%}
+
+          <div class="glowa-buttons">
+            <div class="glowa-buttons__row">
+              <div class="glowa-quantity" data-glowa-qty>
+                <button type="button" class="glowa-quantity__btn" data-glowa-qty-minus aria-label="Decrease quantity">−</button>
+                <input
+                  type="number"
+                  class="glowa-quantity__input"
+                  name="quantity"
+                  value="1"
+                  min="1"
+                  aria-label="Quantity"
+                  data-glowa-qty-input
+                >
+                <button type="button" class="glowa-quantity__btn" data-glowa-qty-plus aria-label="Increase quantity">+</button>
+              </div>
+              <button
+                type="submit"
+                class="glowa-btn glowa-btn--secondary glowa-btn--add"
+                data-glowa-add-to-cart
+                {% unless current_variant.available %}disabled{% endunless %}
+              >
+                {% if current_variant.available or p == blank %}Add To Cart{% else %}Sold Out{% endif %}
+              </button>
+            </div>
+            <button
+              type="button"
+              class="glowa-btn glowa-btn--primary glowa-btn--buy"
+              data-glowa-buy-now
+              {% unless current_variant.available %}disabled{% endunless %}
+            >
+              Buy It Now
+            </button>
+          </div>
+        </form>
+
+        <div class="glowa-trust">
+          {%- assign has_trust = false -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'trust' -%}
+              {%- assign has_trust = true -%}
+              <div class="glowa-trust__item" {{ block.shopify_attributes }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                  {%- case block.settings.icon -%}
+                    {%- when 'truck' -%}
+                      <rect x="1" y="6" width="14" height="10" rx="1"></rect>
+                      <path d="M15 9h4l3 3v4h-7V9z"></path>
+                      <circle cx="6" cy="18" r="2"></circle>
+                      <circle cx="18" cy="18" r="2"></circle>
+                    {%- when 'returns' -%}
+                      <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+                      <polyline points="3 4 3 9 8 9"></polyline>
+                    {%- else -%}
+                      <circle cx="12" cy="12" r="9"></circle>
+                      <polyline points="8 12 11 15 16 9"></polyline>
+                  {%- endcase -%}
+                </svg>
+                <span>{{ block.settings.text }}</span>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- unless has_trust -%}
+            <div class="glowa-trust__item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <rect x="1" y="6" width="14" height="10" rx="1"></rect>
+                <path d="M15 9h4l3 3v4h-7V9z"></path>
+                <circle cx="6"  cy="18" r="2"></circle>
+                <circle cx="18" cy="18" r="2"></circle>
+              </svg>
+              <span>Orders over $50 ship free</span>
+            </div>
+            <div class="glowa-trust__item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+                <polyline points="3 4 3 9 8 9"></polyline>
+              </svg>
+              <span>30 day returns</span>
+            </div>
+          {%- endunless -%}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="glowa-feature-strip glowa-reveal">
+    <div class="glowa-feature-strip__inner">
+      {%- assign has_feature = false -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'feature' -%}
+          {%- assign has_feature = true -%}
+          <div class="glowa-feature-strip__item" {{ block.shopify_attributes }}>
+            <span class="glowa-feature-strip__check" aria-hidden="true">✓</span>
+            <span>{{ block.settings.text }}</span>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+      {%- unless has_feature -%}
+        {%- assign default_features = 'Free Shipping,Money Guarantee,Flexible Payment,Online Support,Return within 7 days' | split: ',' -%}
+        {%- for f in default_features -%}
+          <div class="glowa-feature-strip__item">
+            <span class="glowa-feature-strip__check" aria-hidden="true">✓</span>
+            <span>{{ f }}</span>
+          </div>
+        {%- endfor -%}
+      {%- endunless -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product main",
+  "tag": "section",
+  "class": "glowa-section-product",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Leave empty on a product template to use the current product."
+    },
+    {
+      "type": "header",
+      "content": "Badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Selling fast!"
+    },
+    {
+      "type": "color",
+      "id": "badge_color",
+      "label": "Badge color",
+      "default": "#FF6B8A"
+    },
+    {
+      "type": "header",
+      "content": "Copy"
+    },
+    {
+      "type": "text",
+      "id": "shipping_text",
+      "label": "Shipping note",
+      "default": "Shipping calculated at checkout."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Fallback description",
+      "default": "Whether organic, natural, or allergy-conscious, every serum, moisturizer, or treatment is clinically effective for every kind of clean beauty routine."
+    },
+    {
+      "type": "number",
+      "id": "review_count",
+      "label": "Review count (fallback)",
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "fallback_price",
+      "label": "Fallback price",
+      "default": "$79.00"
+    },
+    {
+      "type": "header",
+      "content": "Urgency"
+    },
+    {
+      "type": "text",
+      "id": "urgency_text",
+      "label": "Urgency text",
+      "info": "Use [count] to show the remaining stock.",
+      "default": "Hurry up, only [count] items left in stock."
+    },
+    {
+      "type": "number",
+      "id": "stock_threshold",
+      "label": "Show urgency when stock ≤",
+      "default": 10
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "truck",   "label": "Truck" },
+            { "value": "returns", "label": "Returns" },
+            { "value": "check",   "label": "Check" }
+          ],
+          "default": "truck"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Orders over $50 ship free"
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "name": "Feature strip item",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Free Shipping"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "GLOWA Product main",
+      "settings": {
+        "show_badge": true,
+        "badge_text": "Selling fast!",
+        "badge_color": "#FF6B8A",
+        "shipping_text": "Shipping calculated at checkout.",
+        "description": "Whether organic, natural, or allergy-conscious, every serum, moisturizer, or treatment is clinically effective for every kind of clean beauty routine.",
+        "review_count": 3,
+        "fallback_price": "$79.00",
+        "urgency_text": "Hurry up, only [count] items left in stock.",
+        "stock_threshold": 10
+      },
+      "blocks": [
+        { "type": "trust",   "settings": { "icon": "truck",   "text": "Orders over $50 ship free" } },
+        { "type": "trust",   "settings": { "icon": "returns", "text": "30 day returns" } },
+        { "type": "feature", "settings": { "text": "Free Shipping" } },
+        { "type": "feature", "settings": { "text": "Money Guarantee" } },
+        { "type": "feature", "settings": { "text": "Flexible Payment" } },
+        { "type": "feature", "settings": { "text": "Online Support" } },
+        { "type": "feature", "settings": { "text": "Return within 7 days" } }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product", "page", "index"]
+  }
+}
+{% endschema %}

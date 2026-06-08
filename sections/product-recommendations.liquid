@@ -1,0 +1,153 @@
+{%- comment -%}
+  GLOWA — Product recommendations.
+
+  Source priority:
+    1. A manually-picked collection (settings.collection).
+    2. Shopify's automatic recommendations API for the current product
+       (rendered when the section is loaded by /recommendations/products
+       and product is present).
+    3. Static fallback cards for the home page.
+{%- endcomment -%}
+
+{%- liquid
+  assign max = section.settings.max_products | default: 4
+  assign products_source = empty
+  if section.settings.collection != blank
+    assign products_source = section.settings.collection.products
+  elsif recommendations and recommendations.products_count > 0
+    assign products_source = recommendations.products
+  endif
+-%}
+
+<section
+  class="glowa-scope glowa-recs"
+  data-glowa-recommendations
+  {% if product %}data-product-id="{{ product.id }}" data-limit="{{ max }}" data-section-id="{{ section.id }}"{% endif %}
+>
+  <div class="glowa-container">
+    <h2 class="glowa-recs__heading glowa-reveal">{{ section.settings.heading | default: 'You may also like' }}</h2>
+
+    <div class="glowa-recs__grid">
+      {%- if products_source != empty -%}
+        {%- assign count = 0 -%}
+        {%- for prod in products_source -%}
+          {%- if count >= max -%}{%- break -%}{%- endif -%}
+          {%- assign count = count | plus: 1 -%}
+          {%- render 'glowa-rec-card', card_product: prod, badge_text: section.settings.badge_text -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'static_card' -%}
+            <article class="glowa-card glowa-reveal" {{ block.shopify_attributes }}>
+              {%- if block.settings.badge != blank -%}
+                <span class="glowa-card__badge">{{ block.settings.badge }}</span>
+              {%- endif -%}
+              <button
+                type="button"
+                class="glowa-card__wishlist"
+                aria-label="Add to wishlist"
+                data-product-id="static-{{ forloop.index }}"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                  <path d="M12 21s-7-4.35-9.5-9A5.5 5.5 0 0 1 12 5.5 5.5 5.5 0 0 1 21.5 12c-2.5 4.65-9.5 9-9.5 9z"></path>
+                </svg>
+              </button>
+              <div class="glowa-card__media">
+                {%- if block.settings.image != blank -%}
+                  {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', widths: '300,600', alt: block.settings.name }}
+                {%- else -%}
+                  {{ 'product-2' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+              </div>
+              <h3 class="glowa-card__name">{{ block.settings.name | default: 'Glow Serum' }}</h3>
+              <div class="glowa-card__rating">
+                <span class="glowa-stars">★★★★☆</span>
+                <span>{{ block.settings.rating | default: '4.4' }} ({{ block.settings.review_count | default: '2764' }})</span>
+              </div>
+              <div class="glowa-card__tags">{{ block.settings.tags | default: 'Oil Control, Brightens, Smooths' }}</div>
+              <div class="glowa-card__price-row">
+                <span class="glowa-card__price">{{ block.settings.price | default: '$6.00 USD' }}</span>
+                <span class="glowa-card__sizes">
+                  <button type="button" class="glowa-card__size">30ml</button>
+                  <button type="button" class="glowa-card__size is-active">60ml</button>
+                </span>
+              </div>
+              <button type="button" class="glowa-card__cta">Add To Cart</button>
+            </article>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product recommendations",
+  "tag": "section",
+  "class": "glowa-section-recs",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "You may also like"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "If empty, Shopify's automatic recommendations are used on product pages."
+    },
+    {
+      "type": "range",
+      "id": "max_products",
+      "label": "Max products",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Card badge text",
+      "default": "Bestseller"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "static_card",
+      "name": "Static card",
+      "settings": [
+        { "type": "text",         "id": "name",         "label": "Name",         "default": "Glow Serum" },
+        { "type": "image_picker", "id": "image",        "label": "Image" },
+        { "type": "text",         "id": "badge",        "label": "Badge",        "default": "Bestseller" },
+        { "type": "text",         "id": "rating",       "label": "Rating",       "default": "4.4" },
+        { "type": "text",         "id": "review_count", "label": "Review count", "default": "2764" },
+        { "type": "text",         "id": "tags",         "label": "Tags",         "default": "Oil Control, Brightens, Smooths" },
+        { "type": "text",         "id": "price",        "label": "Price",        "default": "$6.00 USD" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "GLOWA Product recommendations",
+      "settings": {
+        "heading": "You may also like",
+        "max_products": 4,
+        "badge_text": "Bestseller"
+      },
+      "blocks": [
+        { "type": "static_card", "settings": { "name": "Glow Serum",          "price": "$6.00 USD",  "tags": "Oil Control, Brightens, Smooths" } },
+        { "type": "static_card", "settings": { "name": "Hydra Boost Cream",   "price": "$28.00 USD", "tags": "Deep Hydration, Plumping" } },
+        { "type": "static_card", "settings": { "name": "Vitamin C Toner",     "price": "$22.00 USD", "tags": "Brightening, Even Tone" } },
+        { "type": "static_card", "settings": { "name": "Snail Mucin Essence", "price": "$32.00 USD", "tags": "Repair, Smoothing, Soothing" } }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product", "index", "page", "collection"]
+  }
+}
+{% endschema %}

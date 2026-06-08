@@ -1,53 +1,62 @@
 {
-  "name": "t:sections.footer.name",
+  "name": "Footer",
   "type": "footer",
   "sections": {
     "footer": {
       "type": "footer",
       "blocks": {
-        "footer-0": {
-          "type": "link_list",
+        "shop": {
+          "type": "links",
           "settings": {
-            "heading": "Quick links",
-            "menu": "footer"
+            "heading": "Shop",
+            "links": "Shop All\nSale\nLookbook\nBasic Collections"
           }
         },
-        "footer-1": {
-          "type": "link_list",
+        "care": {
+          "type": "links",
           "settings": {
-            "heading": "Info",
-            "menu": "footer"
+            "heading": "Customer care",
+            "links": "My Account\nContact\nFAQs\nSupport\nShipping and Returns"
           }
         },
-        "footer-2": {
-          "type": "text",
+        "about": {
+          "type": "about",
           "settings": {
-            "heading": "Our mission",
-            "subtext": "<p>Share contact information, store details, and brand content with your customers.<\/p>"
+            "heading": "About",
+            "body": "We only carry designs we believe in ethically and aesthetically – original, authentic pieces that are made to last.",
+            "link_label": "Learn More"
           }
-        }
+        },
+        "social-facebook":  { "type": "social", "settings": { "network": "facebook"  } },
+        "social-twitter":   { "type": "social", "settings": { "network": "twitter"   } },
+        "social-instagram": { "type": "social", "settings": { "network": "instagram" } },
+        "social-tiktok":    { "type": "social", "settings": { "network": "tiktok"    } },
+        "social-pinterest": { "type": "social", "settings": { "network": "pinterest" } },
+        "social-youtube":   { "type": "social", "settings": { "network": "youtube"   } }
       },
       "block_order": [
-        "footer-0",
-        "footer-1",
-        "footer-2"
+        "shop",
+        "care",
+        "about",
+        "social-facebook",
+        "social-twitter",
+        "social-instagram",
+        "social-tiktok",
+        "social-pinterest",
+        "social-youtube"
       ],
       "settings": {
-        "color_scheme": "scheme-1",
-        "newsletter_enable": true,
-        "newsletter_heading": "Subscribe to our emails",
-        "show_social": true,
-        "enable_country_selector": false,
-        "enable_language_selector": false,
-        "payment_enable": true,
-        "show_policy": false,
-        "margin_top": 48,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "newsletter_heading": "Subscribe to get 10% OFF",
+        "newsletter_subtext": "Subscribe for store updates and discounts.",
+        "newsletter_fine_print": "By subscribing you agree to the Terms of Use & Privacy Policy",
+        "show_country": true,
+        "country_flag": "🇶🇦",
+        "country_text": "Qatar (Riyal)",
+        "copyright": "© 2026 GLOWA.",
+        "show_payments": true,
+        "payment_methods": "VISA, MC, AMEX, PP, DIN, DISC"
       }
     }
   },
-  "order": [
-    "footer"
-  ]
+  "order": ["footer"]
 }

@@ -1,0 +1,243 @@
+{%- comment -%}
+  GLOWA — Bestsellers / New Releases tab section.
+  Two tabs, each tab shows a 5-column product card grid.
+  Cards use placeholder SVGs by default; merchants can later add real
+  product images via the block settings.
+{%- endcomment -%}
+
+{%- liquid
+  assign bs_count = 0
+  assign nr_count = 0
+  for block in section.blocks
+    if block.type == 'card'
+      if block.settings.tab == 'new-releases'
+        assign nr_count = nr_count | plus: 1
+      else
+        assign bs_count = bs_count | plus: 1
+      endif
+    endif
+  endfor
+-%}
+
+<section class="glowa-scope glowa-bestsellers" data-glowa-tabs>
+  <div class="glowa-container">
+
+    <div class="glowa-bestsellers__tabs" role="tablist">
+      <button
+        type="button"
+        class="glowa-bestsellers__tab is-active"
+        role="tab"
+        aria-selected="true"
+        aria-controls="bs-panel-bestsellers"
+        data-glowa-tab="bestsellers"
+      >
+        {{ section.settings.tab_one_label | default: 'Bestsellers' }}
+        {%- if bs_count > 0 -%}<sup class="glowa-bestsellers__count">{{ bs_count }}</sup>{%- endif -%}
+      </button>
+      <button
+        type="button"
+        class="glowa-bestsellers__tab"
+        role="tab"
+        aria-selected="false"
+        aria-controls="bs-panel-new-releases"
+        data-glowa-tab="new-releases"
+      >
+        {{ section.settings.tab_two_label | default: 'New Releases' }}
+        {%- if nr_count > 0 -%}<sup class="glowa-bestsellers__count">{{ nr_count }}</sup>{%- endif -%}
+      </button>
+    </div>
+
+    {%- assign tab_keys = 'bestsellers,new-releases' | split: ',' -%}
+    {%- for tab in tab_keys -%}
+      <div
+        class="glowa-bestsellers__panel{% if tab == 'bestsellers' %} is-active{% endif %}"
+        id="bs-panel-{{ tab }}"
+        role="tabpanel"
+        data-glowa-tab-panel="{{ tab }}"
+        {% if tab != 'bestsellers' %}hidden{% endif %}
+      >
+        <div class="glowa-bestsellers__grid">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'card' -%}
+              {%- assign block_tab = block.settings.tab | default: 'bestsellers' -%}
+              {%- if block_tab == tab -%}
+                <article class="glowa-mini-card glowa-reveal" {{ block.shopify_attributes }}>
+                  {%- if block.settings.badge != blank -%}
+                    <span class="glowa-mini-card__badge">{{ block.settings.badge }}</span>
+                  {%- endif -%}
+
+                  <button
+                    type="button"
+                    class="glowa-mini-card__wishlist"
+                    aria-label="Add to wishlist"
+                    data-product-id="bs-{{ section.id }}-{{ forloop.index }}"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                      <path d="M12 21s-7-4.35-9.5-9A5.5 5.5 0 0 1 12 5.5 5.5 5.5 0 0 1 21.5 12c-2.5 4.65-9.5 9-9.5 9z"></path>
+                    </svg>
+                  </button>
+
+                  <div class="glowa-mini-card__media">
+                    {%- if block.settings.image != blank -%}
+                      {{ block.settings.image | image_url: width: 400 | image_tag:
+                          loading: 'lazy',
+                          widths: '200,400',
+                          alt: block.settings.name
+                      }}
+                    {%- else -%}
+                      {%- assign placeholder_index = forloop.index0 | modulo: 6 | plus: 1 -%}
+                      {%- assign placeholder_name = 'product-' | append: placeholder_index -%}
+                      {{ placeholder_name | placeholder_svg_tag: 'glowa-mini-card__placeholder-svg' }}
+                    {%- endif -%}
+                  </div>
+
+                  <h3 class="glowa-mini-card__name">{{ block.settings.name | default: 'Glow Serum' }}</h3>
+
+                  <div class="glowa-mini-card__rating">
+                    <span class="glowa-stars" aria-hidden="true">★★★★</span><span class="glowa-stars glowa-stars--half" aria-hidden="true">★</span>
+                    <span class="glowa-mini-card__rating-value">{{ block.settings.rating | default: '4.4' }}</span>
+                    <span class="glowa-mini-card__review-count">({{ block.settings.review_count | default: '2754' }})</span>
+                  </div>
+
+                  <p class="glowa-mini-card__tags">{{ block.settings.tags | default: 'Oil Control, Brightens, Smooths' }}</p>
+
+                  <div class="glowa-mini-card__meta">
+                    <span class="glowa-mini-card__price">{{ block.settings.price | default: '$6.00 USD' }}</span>
+                    <span class="glowa-mini-card__sizes">
+                      <button type="button" class="glowa-mini-card__size">{{ block.settings.size_one | default: '30ml' }}</button>
+                      <span class="glowa-mini-card__sep" aria-hidden="true">|</span>
+                      <button type="button" class="glowa-mini-card__size is-active">{{ block.settings.size_two | default: '60ml' }}</button>
+                    </span>
+                  </div>
+
+                  <button type="button" class="glowa-mini-card__cta">{{ section.settings.cta_label | default: 'Add To Cart' }}</button>
+                </article>
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Bestsellers tabs",
+  "tag": "section",
+  "class": "glowa-section-bestsellers",
+  "settings": [
+    {
+      "type": "text",
+      "id": "tab_one_label",
+      "label": "Tab 1 label",
+      "default": "Bestsellers"
+    },
+    {
+      "type": "text",
+      "id": "tab_two_label",
+      "label": "Tab 2 label",
+      "default": "New Releases"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Card CTA label",
+      "default": "Add To Cart"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Product card",
+      "settings": [
+        {
+          "type": "select",
+          "id": "tab",
+          "label": "Tab",
+          "options": [
+            { "value": "bestsellers",  "label": "Bestsellers" },
+            { "value": "new-releases", "label": "New Releases" }
+          ],
+          "default": "bestsellers"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Product name",
+          "default": "Glow Serum"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Product image (optional)"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Top-left label",
+          "default": "Bestseller"
+        },
+        {
+          "type": "text",
+          "id": "rating",
+          "label": "Star rating value",
+          "default": "4.4"
+        },
+        {
+          "type": "text",
+          "id": "review_count",
+          "label": "Review count",
+          "default": "2754"
+        },
+        {
+          "type": "text",
+          "id": "tags",
+          "label": "Tag list",
+          "default": "Oil Control, Brightens, Smooths"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "$6.00 USD"
+        },
+        {
+          "type": "text",
+          "id": "size_one",
+          "label": "Size option 1",
+          "default": "30ml"
+        },
+        {
+          "type": "text",
+          "id": "size_two",
+          "label": "Size option 2",
+          "default": "60ml"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "GLOWA Bestsellers tabs",
+      "settings": {
+        "tab_one_label": "Bestsellers",
+        "tab_two_label": "New Releases",
+        "cta_label": "Add To Cart"
+      },
+      "blocks": [
+        { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
+        { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
+        { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
+        { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
+        { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
+        { "type": "card", "settings": { "tab": "new-releases", "name": "Glow Serum" } },
+        { "type": "card", "settings": { "tab": "new-releases", "name": "Glow Serum" } }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": ["index", "page", "collection"]
+  }
+}
+{% endschema %}

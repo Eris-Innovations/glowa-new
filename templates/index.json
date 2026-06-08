@@ -1,229 +1,146 @@
 {
   "sections": {
-    "hero_banner": {
-      "type": "hero-banner",
+    "hero": {
+      "type": "hero",
       "settings": {
+        "min_height": 420,
+        "overlay_opacity": 0,
+        "content_position": "left",
+        "background_color": "#F5F0EA",
+        "text_color": "#1A1A1A",
+        "accent_color": "#6B6428",
         "eyebrow": "Blend beauty in you",
         "heading": "Get the skin you want to feel",
-        "subheading": "A soft, editorial homepage inspired by the provided Glowa landing page references.",
-        "button_text": "Shop Now",
-        "button_link": "shopify://collections/all"
+        "subheading": "",
+        "button_label": "Shop Now",
+        "button_secondary_label": ""
       }
     },
-    "product_tabs": {
-      "type": "tabbed-product-showcase",
+    "bestsellers": {
+      "type": "bestsellers",
+      "blocks": {
+        "bs-1": { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
+        "bs-2": { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
+        "bs-3": { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
+        "bs-4": { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
+        "bs-5": { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
+        "nr-1": { "type": "card", "settings": { "tab": "new-releases", "name": "Glow Serum" } },
+        "nr-2": { "type": "card", "settings": { "tab": "new-releases", "name": "Glow Serum" } }
+      },
+      "block_order": ["bs-1", "bs-2", "bs-3", "bs-4", "bs-5", "nr-1", "nr-2"],
       "settings": {
-        "best_sellers_title": "Bestsellers",
-        "best_sellers_collection": "",
-        "best_sellers_badge": "Bestseller",
-        "new_releases_title": "New Releases",
-        "new_releases_collection": "",
-        "new_releases_badge": "Bestseller",
-        "products_to_show": 5
+        "tab_one_label": "Bestsellers",
+        "tab_two_label": "New Releases",
+        "cta_label": "Add To Cart"
       }
     },
-    "common_concerns": {
+    "common-concerns": {
       "type": "common-concerns",
       "blocks": {
-        "concern_1": {
-          "type": "concern",
-          "settings": {
-            "title": "Aging"
-          }
-        },
-        "concern_2": {
-          "type": "concern",
-          "settings": {
-            "title": "Congestion"
-          }
-        },
-        "concern_3": {
-          "type": "concern",
-          "settings": {
-            "title": "Texture"
-          }
-        },
-        "concern_4": {
-          "type": "concern",
-          "settings": {
-            "title": "Redness"
-          }
-        },
-        "concern_5": {
-          "type": "concern",
-          "settings": {
-            "title": "Dryness"
-          }
-        }
+        "c-1": { "type": "concern", "settings": { "label": "Aging" } },
+        "c-2": { "type": "concern", "settings": { "label": "Congestion" } },
+        "c-3": { "type": "concern", "settings": { "label": "Texture" } },
+        "c-4": { "type": "concern", "settings": { "label": "Redness" } },
+        "c-5": { "type": "concern", "settings": { "label": "Dryness" } }
       },
-      "block_order": [
-        "concern_1",
-        "concern_2",
-        "concern_3",
-        "concern_4",
-        "concern_5"
-      ],
+      "block_order": ["c-1", "c-2", "c-3", "c-4", "c-5"],
       "settings": {
         "heading": "Common Concerns",
-        "text": "<p>Not sure where to start? Add the concern imagery and route customers into the right routine.</p>"
+        "subheading": "Not sure where to start? Our formulas are crafted for real skin, whatever it's going through."
       }
     },
-    "best_seller_banner": {
-      "type": "best-seller-banner",
+    "promo-banner": {
+      "type": "promo-banner",
       "settings": {
         "heading": "Our Best Sellers",
-        "button_text": "Shop Now",
-        "button_link": "shopify://collections/all"
+        "heading_color": "#1A1A1A",
+        "gradient_start": "#F5C5C0",
+        "gradient_end": "#E8C4B0",
+        "frame_color": "#FFFFFF",
+        "min_height": 360,
+        "cta_label": "Shop Now",
+        "cta_bg": "#6B6428",
+        "cta_color": "#FFFFFF"
       }
     },
     "testimonials": {
-      "type": "testimonials-showcase",
+      "type": "testimonials",
       "blocks": {
-        "testimonial_1": {
+        "t-1": {
           "type": "testimonial",
           "settings": {
-            "card_style": "image",
-            "name": "Customer 1",
-            "role": "Verified Customer",
-            "rating": 5,
-            "quote": "<p></p>",
-            "product_name": "",
-            "product_price": ""
-          }
-        },
-        "testimonial_2": {
-          "type": "testimonial",
-          "settings": {
-            "card_style": "review",
             "name": "Mia D",
-            "role": "Verified Customer",
-            "rating": 5,
-            "quote": "<p>Each Puff product is meticulously crafted and designed to unveil your most radiant self.</p>",
+            "label": "Verified Customer",
+            "rating": 4,
+            "body": "Each Puff product is meticulously crafted, infused with the finest botanicals and scientifically-backed actives, all working in harmony to unveil your most radiant self. Embrace the Puff experience, and discover the art of beautiful self-love. Because you deserve to be pampered, cherished, and absolutely radiant.",
             "product_name": "Cream",
             "product_price": "$60.00"
           }
         },
-        "testimonial_3": {
+        "t-2": {
           "type": "testimonial",
           "settings": {
-            "card_style": "image",
-            "name": "Customer 2",
-            "role": "Verified Customer",
-            "rating": 5,
-            "quote": "<p></p>",
-            "product_name": "",
-            "product_price": ""
-          }
-        },
-        "testimonial_4": {
-          "type": "testimonial",
-          "settings": {
-            "card_style": "review",
             "name": "Mia D",
-            "role": "Verified Customer",
-            "rating": 5,
-            "quote": "<p>Because you deserve to be pampered, cherished, and absolutely radiant.</p>",
+            "label": "Verified Customer",
+            "rating": 4,
+            "body": "Each Puff product is meticulously crafted, infused with the finest botanicals and scientifically-backed actives, all working in harmony to unveil your most radiant self. Embrace the Puff experience, and discover the art of beautiful self-love. Because you deserve to be pampered, cherished, and absolutely radiant.",
             "product_name": "Glow Serum",
             "product_price": "$60.00"
           }
         }
       },
-      "block_order": [
-        "testimonial_1",
-        "testimonial_2",
-        "testimonial_3",
-        "testimonial_4"
-      ],
+      "block_order": ["t-1", "t-2"],
       "settings": {
-        "heading": "Customers love us."
+        "heading_accent": "Customers",
+        "heading_text": " love us.",
+        "accent_color": "#B8960C"
       }
     },
-    "faq_spotlight": {
-      "type": "faq-spotlight",
+    "faq-section": {
+      "type": "faq-section",
       "blocks": {
-        "faq_1": {
+        "faq-1": {
           "type": "faq",
           "settings": {
             "question": "How long does shipping take?",
-            "answer": "<p>Shipping usually takes 3-7 business days depending on your location.</p>"
+            "answer": "Shipping usually takes 3-7 business days, depending on your location. Expedited shipping options are available for faster delivery. Contact us for any specific shipping inquiries.",
+            "default_open": true
           }
         },
-        "faq_2": {
+        "faq-2": {
           "type": "faq",
           "settings": {
             "question": "Does my piece come in any packaging?",
-            "answer": "<p>Yes. Orders are packed carefully with protective wrapping and branded touches.</p>"
+            "answer": "Every GLOWA order is shipped in fully recyclable, signature kraft packaging — designed to look as beautiful as the product inside.",
+            "default_open": false
           }
         },
-        "faq_3": {
+        "faq-3": {
           "type": "faq",
           "settings": {
             "question": "Do you ship internationally?",
-            "answer": "<p>Yes. International availability depends on the destination and carrier coverage.</p>"
+            "answer": "Yes — we ship to over 60 countries. International shipping rates and delivery times are calculated at checkout based on your destination.",
+            "default_open": false
           }
         },
-        "faq_4": {
+        "faq-4": {
           "type": "faq",
           "settings": {
             "question": "What payment methods do you accept?",
-            "answer": "<p>You can accept major cards and any additional payment methods enabled in Shopify Payments.</p>"
+            "answer": "We accept all major credit cards (Visa, Mastercard, American Express, Discover, Diners), PayPal, Apple Pay, Google Pay and Shop Pay.",
+            "default_open": false
           }
         }
       },
-      "block_order": [
-        "faq_1",
-        "faq_2",
-        "faq_3",
-        "faq_4"
-      ],
+      "block_order": ["faq-1", "faq-2", "faq-3", "faq-4"],
       "settings": {
         "heading": "We're answerable!",
-        "text": "<p>We create safe products that really work and are designed to make people feel good. Add support copy here for the final landing-page section.</p>",
-        "button_text": "See More Answers",
-        "button_link": "/pages/contact"
-      }
-    },
-    "newsletter": {
-      "type": "newsletter",
-      "blocks": {
-        "heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Subscribe to get 10% OFF",
-            "heading_size": "h1"
-          }
-        },
-        "paragraph": {
-          "type": "paragraph",
-          "settings": {
-            "text": "<p>Subscribe for store updates and discounts.</p>"
-          }
-        },
-        "email_form": {
-          "type": "email_form",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "heading",
-        "paragraph",
-        "email_form"
-      ],
-      "settings": {
-        "color_scheme": "scheme-1",
-        "full_width": true,
-        "padding_top": 40,
-        "padding_bottom": 52
+        "subtext": "<p>We create safe products that really work and are designed to make you feel good. Any question about our products?</p>",
+        "help_label": "Check if you can find them here",
+        "contact_label": "Contact us",
+        "cta_label": "See More Answers"
       }
     }
   },
-  "order": [
-    "hero_banner",
-    "product_tabs",
-    "common_concerns",
-    "best_seller_banner",
-    "testimonials",
-    "faq_spotlight",
-    "newsletter"
-  ]
+  "order": ["hero", "bestsellers", "common-concerns", "promo-banner", "testimonials", "faq-section"]
 }

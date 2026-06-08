@@ -1,99 +1,64 @@
-<section class="common-concerns section-{{ section.id }}">
-  <div class="page-width">
-    <div class="common-concerns__header">
-      <h2>{{ section.settings.heading }}</h2>
-      <div class="common-concerns__text rte">{{ section.settings.text }}</div>
-    </div>
+{%- comment -%}
+  GLOWA — Common Concerns.
+  Heading + subheading + 5-column grid of concern cards.
+  Each card: portrait area (placeholder SVG silhouette by default) + label.
+{%- endcomment -%}
 
-    <div class="common-concerns__grid">
-      {% for block in section.blocks %}
-        <article class="common-concerns__card" {{ block.shopify_attributes }}>
-          <div class="common-concerns__image">
-            {% if block.settings.image %}
-              {{
-                block.settings.image
-                | image_url: width: 900
-                | image_tag:
-                  loading: 'lazy',
-                  widths: '300, 450, 600, 900',
-                  sizes: '(min-width: 990px) 18vw, (min-width: 750px) 30vw, 70vw',
-                  alt: block.settings.title
-              }}
-            {% else %}
-              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-            {% endif %}
-          </div>
-          <h3>{{ block.settings.title }}</h3>
-        </article>
-      {% endfor %}
+<section class="glowa-scope glowa-concerns">
+  <div class="glowa-container">
+
+    <header class="glowa-concerns__header glowa-reveal">
+      <h2 class="glowa-concerns__heading">{{ section.settings.heading | default: 'Common Concerns' }}</h2>
+      {%- if section.settings.subheading != blank -%}
+        <p class="glowa-concerns__sub">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </header>
+
+    <div class="glowa-concerns__grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'concern' -%}
+          {%- assign target_url = block.settings.link | default: '#' -%}
+          <a class="glowa-concern glowa-reveal" href="{{ target_url }}" {{ block.shopify_attributes }}>
+            <div class="glowa-concern__media">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 600 | image_tag:
+                    loading: 'lazy',
+                    widths: '300,600',
+                    alt: block.settings.label
+                }}
+              {%- else -%}
+                <svg class="glowa-concern__placeholder" viewBox="0 0 100 120" aria-hidden="true">
+                  <rect x="0" y="0" width="100" height="120" fill="var(--color-bg)"/>
+                  <circle cx="50" cy="45" r="18" fill="rgba(184, 150, 12, 0.18)"/>
+                  <path
+                    d="M22 110 Q22 78 50 78 Q78 78 78 110 L78 120 L22 120 Z"
+                    fill="rgba(184, 150, 12, 0.18)"
+                  />
+                  <text
+                    x="50"
+                    y="115"
+                    text-anchor="middle"
+                    font-family="Cormorant Garamond, serif"
+                    font-size="14"
+                    font-style="italic"
+                    fill="rgba(107, 100, 40, 0.55)"
+                  >{{ block.settings.label | slice: 0 | upcase }}</text>
+                </svg>
+              {%- endif -%}
+            </div>
+            <span class="glowa-concern__label">{{ block.settings.label | default: 'Aging' }}</span>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
     </div>
   </div>
 </section>
 
-{%- style -%}
-  .common-concerns {
-    padding: 5.6rem 0;
-    background: #ffffff;
-  }
-
-  .common-concerns__header {
-    margin-bottom: 3.2rem;
-  }
-
-  .common-concerns__header h2 {
-    margin: 0 0 1.2rem;
-    color: #c4ab4c;
-    font-size: clamp(3.2rem, 4vw, 5.6rem);
-    line-height: 1;
-  }
-
-  .common-concerns__text {
-    max-width: 62rem;
-    color: rgba(44, 35, 17, 0.78);
-  }
-
-  .common-concerns__grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2rem;
-  }
-
-  .common-concerns__card {
-    margin: 0;
-  }
-
-  .common-concerns__image {
-    aspect-ratio: 1 / 1;
-    border-radius: 1.6rem;
-    overflow: hidden;
-    background: #f7f2e8;
-  }
-
-  .common-concerns__image img,
-  .common-concerns__image svg {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .common-concerns__card h3 {
-    margin: 1.4rem 0 0;
-    text-align: center;
-    color: #2b241b;
-    font-size: 2rem;
-  }
-
-  @media screen and (min-width: 990px) {
-    .common-concerns__grid {
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 3.6rem;
-    }
-  }
-{%- endstyle -%}
-
 {% schema %}
 {
-  "name": "Common Concerns",
+  "name": "Common concerns",
+  "tag": "section",
+  "class": "glowa-section-concerns",
   "settings": [
     {
       "type": "text",
@@ -102,10 +67,10 @@
       "default": "Common Concerns"
     },
     {
-      "type": "richtext",
-      "id": "text",
-      "label": "Text",
-      "default": "<p>Not sure where to start? Use this section to guide customers into the right routine.</p>"
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Not sure where to start? Our formulas are crafted for real skin, whatever it's going through."
     }
   ],
   "blocks": [
@@ -114,30 +79,42 @@
       "name": "Concern",
       "settings": [
         {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Aging"
         },
         {
-          "type": "text",
-          "id": "title",
-          "label": "Title",
-          "default": "Dryness"
+          "type": "image_picker",
+          "id": "image",
+          "label": "Portrait image (optional)"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Common Concerns",
+      "name": "GLOWA Common concerns",
+      "settings": {
+        "heading": "Common Concerns",
+        "subheading": "Not sure where to start? Our formulas are crafted for real skin, whatever it's going through."
+      },
       "blocks": [
-        { "type": "concern" },
-        { "type": "concern" },
-        { "type": "concern" },
-        { "type": "concern" },
-        { "type": "concern" }
+        { "type": "concern", "settings": { "label": "Aging" } },
+        { "type": "concern", "settings": { "label": "Congestion" } },
+        { "type": "concern", "settings": { "label": "Texture" } },
+        { "type": "concern", "settings": { "label": "Redness" } },
+        { "type": "concern", "settings": { "label": "Dryness" } }
       ]
     }
-  ]
+  ],
+  "enabled_on": {
+    "templates": ["index", "page", "collection"]
+  }
 }
 {% endschema %}
