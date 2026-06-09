@@ -18,19 +18,13 @@
     },
     "bestsellers": {
       "type": "bestsellers",
-      "blocks": {
-        "bs-1": { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
-        "bs-2": { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
-        "bs-3": { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
-        "bs-4": { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
-        "bs-5": { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
-        "nr-1": { "type": "card", "settings": { "tab": "new-releases", "name": "Glow Serum" } },
-        "nr-2": { "type": "card", "settings": { "tab": "new-releases", "name": "Glow Serum" } }
-      },
-      "block_order": ["bs-1", "bs-2", "bs-3", "bs-4", "bs-5", "nr-1", "nr-2"],
       "settings": {
         "tab_one_label": "Bestsellers",
         "tab_two_label": "New Releases",
+        "bestsellers_collection": "bestsellers",
+        "new_releases_collection": "new-releases",
+        "products_per_tab": 5,
+        "card_badge": "Bestseller",
         "cta_label": "Add To Cart"
       }
     },

@@ -110,7 +110,7 @@
           </span>
         {%- endif -%}
 
-        <h1 class="glowa-product__title">{{ p.title | default: 'Dynasty Cream' }}</h1>
+        <h1 class="glowa-product__title">{{ p.title | default: section.settings.fallback_title | default: 'Beauty of Joseon Dynasty cream (50 ml)' }}</h1>
 
         <div class="glowa-product__rating" aria-label="Rated 5 out of 5">
           <span class="glowa-stars" aria-hidden="true">★★★★★</span>
@@ -195,11 +195,10 @@
             <div class="glowa-product__option">
               <label class="glowa-product__option-label">
                 Size:
-                <span class="glowa-product__option-value" data-glowa-size-label>60</span>
+                <span class="glowa-product__option-value" data-glowa-size-label>{{ section.settings.fallback_size | default: '50ml' }}</span>
               </label>
               <div class="glowa-size-options" data-glowa-size-group role="group" aria-label="Size">
-                <button type="button" class="glowa-size-options__button" data-value="70cl">70cl</button>
-                <button type="button" class="glowa-size-options__button is-active" data-value="60ml">60ml</button>
+                <button type="button" class="glowa-size-options__button is-active" data-value="{{ section.settings.fallback_size | default: '50ml' }}">{{ section.settings.fallback_size | default: '50ml' }}</button>
               </div>
             </div>
           {%- endif -%}
@@ -373,6 +372,18 @@
       "id": "fallback_price",
       "label": "Fallback price",
       "default": "$79.00"
+    },
+    {
+      "type": "text",
+      "id": "fallback_title",
+      "label": "Fallback title",
+      "default": "Beauty of Joseon Dynasty cream (50 ml)"
+    },
+    {
+      "type": "text",
+      "id": "fallback_size",
+      "label": "Fallback size button",
+      "default": "50ml"
     },
     {
       "type": "header",

@@ -1,22 +1,42 @@
 {%- comment -%}
   GLOWA — Bestsellers / New Releases tab section.
   Two tabs, each tab shows a 5-column product card grid.
-  Cards use placeholder SVGs by default; merchants can later add real
-  product images via the block settings.
+
+  Data source priority per tab:
+    1. A merchant-picked Shopify collection (settings.bestsellers_collection
+       and settings.new_releases_collection).
+    2. Static `card` blocks scoped to that tab.
 {%- endcomment -%}
 
 {%- liquid
+  assign max = section.settings.products_per_tab | default: 5
+
+  assign bs_collection = section.settings.bestsellers_collection
+  assign nr_collection = section.settings.new_releases_collection
+
   assign bs_count = 0
   assign nr_count = 0
-  for block in section.blocks
-    if block.type == 'card'
-      if block.settings.tab == 'new-releases'
-        assign nr_count = nr_count | plus: 1
-      else
+  if bs_collection != blank
+    assign bs_count = bs_collection.products_count | at_most: max
+  endif
+  if nr_collection != blank
+    assign nr_count = nr_collection.products_count | at_most: max
+  endif
+
+  if bs_count == 0
+    for block in section.blocks
+      if block.type == 'card' and block.settings.tab != 'new-releases'
         assign bs_count = bs_count | plus: 1
       endif
-    endif
-  endfor
+    endfor
+  endif
+  if nr_count == 0
+    for block in section.blocks
+      if block.type == 'card' and block.settings.tab == 'new-releases'
+        assign nr_count = nr_count | plus: 1
+      endif
+    endfor
+  endif
 -%}
 
 <section class="glowa-scope glowa-bestsellers" data-glowa-tabs>
@@ -49,6 +69,13 @@
 
     {%- assign tab_keys = 'bestsellers,new-releases' | split: ',' -%}
     {%- for tab in tab_keys -%}
+      {%- liquid
+        if tab == 'bestsellers'
+          assign tab_collection = bs_collection
+        else
+          assign tab_collection = nr_collection
+        endif
+      -%}
       <div
         class="glowa-bestsellers__panel{% if tab == 'bestsellers' %} is-active{% endif %}"
         id="bs-panel-{{ tab }}"
@@ -57,64 +84,143 @@
         {% if tab != 'bestsellers' %}hidden{% endif %}
       >
         <div class="glowa-bestsellers__grid">
-          {%- for block in section.blocks -%}
-            {%- if block.type == 'card' -%}
-              {%- assign block_tab = block.settings.tab | default: 'bestsellers' -%}
-              {%- if block_tab == tab -%}
-                <article class="glowa-mini-card glowa-reveal" {{ block.shopify_attributes }}>
-                  {%- if block.settings.badge != blank -%}
-                    <span class="glowa-mini-card__badge">{{ block.settings.badge }}</span>
+
+          {%- if tab_collection != blank and tab_collection.products_count > 0 -%}
+            {%- assign rendered = 0 -%}
+            {%- for cp in tab_collection.products -%}
+              {%- if rendered >= max -%}{%- break -%}{%- endif -%}
+              {%- assign rendered = rendered | plus: 1 -%}
+              {%- assign cp_variant   = cp.selected_or_first_available_variant -%}
+              {%- assign size_option  = cp.options_with_values.first -%}
+              {%- assign cp_rating    = cp.metafields.reviews.rating.value | default: '4.4' -%}
+              {%- assign cp_reviews   = cp.metafields.reviews.rating_count.value | default: cp.id | modulo: 5000 -%}
+
+              <article class="glowa-mini-card glowa-reveal" data-glowa-product>
+                <span class="glowa-mini-card__badge">{{ section.settings.card_badge | default: 'Bestseller' }}</span>
+
+                <button
+                  type="button"
+                  class="glowa-mini-card__wishlist"
+                  aria-label="Add to wishlist"
+                  data-product-id="{{ cp.id }}"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                    <path d="M12 21s-7-4.35-9.5-9A5.5 5.5 0 0 1 12 5.5 5.5 5.5 0 0 1 21.5 12c-2.5 4.65-9.5 9-9.5 9z"></path>
+                  </svg>
+                </button>
+
+                <a href="{{ cp.url }}" class="glowa-mini-card__media" aria-label="{{ cp.title | escape }}">
+                  {%- if cp.featured_image != blank -%}
+                    {{ cp.featured_image | image_url: width: 400 | image_tag:
+                        loading: 'lazy', widths: '200,400', alt: cp.title
+                    }}
+                  {%- else -%}
+                    {%- assign placeholder_index = forloop.index0 | modulo: 6 | plus: 1 -%}
+                    {{ 'product-' | append: placeholder_index | placeholder_svg_tag: 'glowa-mini-card__placeholder-svg' }}
                   {%- endif -%}
+                </a>
 
-                  <button
-                    type="button"
-                    class="glowa-mini-card__wishlist"
-                    aria-label="Add to wishlist"
-                    data-product-id="bs-{{ section.id }}-{{ forloop.index }}"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-                      <path d="M12 21s-7-4.35-9.5-9A5.5 5.5 0 0 1 12 5.5 5.5 5.5 0 0 1 21.5 12c-2.5 4.65-9.5 9-9.5 9z"></path>
-                    </svg>
-                  </button>
+                <h3 class="glowa-mini-card__name"><a href="{{ cp.url }}">{{ cp.title }}</a></h3>
 
-                  <div class="glowa-mini-card__media">
-                    {%- if block.settings.image != blank -%}
-                      {{ block.settings.image | image_url: width: 400 | image_tag:
-                          loading: 'lazy',
-                          widths: '200,400',
-                          alt: block.settings.name
-                      }}
-                    {%- else -%}
-                      {%- assign placeholder_index = forloop.index0 | modulo: 6 | plus: 1 -%}
-                      {%- assign placeholder_name = 'product-' | append: placeholder_index -%}
-                      {{ placeholder_name | placeholder_svg_tag: 'glowa-mini-card__placeholder-svg' }}
+                <div class="glowa-mini-card__rating">
+                  <span class="glowa-stars" aria-hidden="true">★★★★</span><span class="glowa-stars glowa-stars--half" aria-hidden="true">★</span>
+                  <span class="glowa-mini-card__rating-value">{{ cp_rating }}</span>
+                  <span class="glowa-mini-card__review-count">({{ cp_reviews }})</span>
+                </div>
+
+                {%- if cp.tags.size > 0 -%}
+                  <p class="glowa-mini-card__tags">{{ cp.tags | join: ', ' | truncate: 50 }}</p>
+                {%- endif -%}
+
+                <form method="post" action="{{ routes.cart_add_url }}" data-glowa-product-form>
+                  <input type="hidden" name="form_type" value="product">
+                  <input type="hidden" name="id" value="{{ cp_variant.id }}" data-glowa-variant-id>
+                  <input type="hidden" name="quantity" value="1">
+
+                  <div class="glowa-mini-card__meta">
+                    <span class="glowa-mini-card__price" data-glowa-price>{{ cp_variant.price | money }}</span>
+                    {%- if size_option != blank and size_option.values.size > 1 -%}
+                      <span class="glowa-mini-card__sizes" data-glowa-size-group>
+                        {%- for v in cp.variants limit: 2 -%}
+                          {%- assign opt_value = v.options.first -%}
+                          <button
+                            type="button"
+                            class="glowa-mini-card__size{% if v.id == cp_variant.id %} is-active{% endif %}"
+                            data-value="{{ opt_value }}"
+                            data-variant-id="{{ v.id }}"
+                            data-price="{{ v.price | money }}"
+                            data-available="{{ v.available }}"
+                          >{{ opt_value }}</button>
+                          {%- unless forloop.last -%}<span class="glowa-mini-card__sep" aria-hidden="true">|</span>{%- endunless -%}
+                        {%- endfor -%}
+                      </span>
                     {%- endif -%}
                   </div>
 
-                  <h3 class="glowa-mini-card__name">{{ block.settings.name | default: 'Glow Serum' }}</h3>
+                  <button type="submit" class="glowa-mini-card__cta" data-glowa-add-to-cart>{{ section.settings.cta_label | default: 'Add To Cart' }}</button>
+                </form>
+              </article>
+            {%- endfor -%}
 
-                  <div class="glowa-mini-card__rating">
-                    <span class="glowa-stars" aria-hidden="true">★★★★</span><span class="glowa-stars glowa-stars--half" aria-hidden="true">★</span>
-                    <span class="glowa-mini-card__rating-value">{{ block.settings.rating | default: '4.4' }}</span>
-                    <span class="glowa-mini-card__review-count">({{ block.settings.review_count | default: '2754' }})</span>
-                  </div>
+          {%- else -%}
 
-                  <p class="glowa-mini-card__tags">{{ block.settings.tags | default: 'Oil Control, Brightens, Smooths' }}</p>
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'card' -%}
+                {%- assign block_tab = block.settings.tab | default: 'bestsellers' -%}
+                {%- if block_tab == tab -%}
+                  <article class="glowa-mini-card glowa-reveal" {{ block.shopify_attributes }}>
+                    {%- if block.settings.badge != blank -%}
+                      <span class="glowa-mini-card__badge">{{ block.settings.badge }}</span>
+                    {%- endif -%}
 
-                  <div class="glowa-mini-card__meta">
-                    <span class="glowa-mini-card__price">{{ block.settings.price | default: '$6.00 USD' }}</span>
-                    <span class="glowa-mini-card__sizes">
-                      <button type="button" class="glowa-mini-card__size">{{ block.settings.size_one | default: '30ml' }}</button>
-                      <span class="glowa-mini-card__sep" aria-hidden="true">|</span>
-                      <button type="button" class="glowa-mini-card__size is-active">{{ block.settings.size_two | default: '60ml' }}</button>
-                    </span>
-                  </div>
+                    <button
+                      type="button"
+                      class="glowa-mini-card__wishlist"
+                      aria-label="Add to wishlist"
+                      data-product-id="bs-{{ section.id }}-{{ forloop.index }}"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                        <path d="M12 21s-7-4.35-9.5-9A5.5 5.5 0 0 1 12 5.5 5.5 5.5 0 0 1 21.5 12c-2.5 4.65-9.5 9-9.5 9z"></path>
+                      </svg>
+                    </button>
 
-                  <button type="button" class="glowa-mini-card__cta">{{ section.settings.cta_label | default: 'Add To Cart' }}</button>
-                </article>
+                    <div class="glowa-mini-card__media">
+                      {%- if block.settings.image != blank -%}
+                        {{ block.settings.image | image_url: width: 400 | image_tag:
+                            loading: 'lazy', widths: '200,400', alt: block.settings.name
+                        }}
+                      {%- else -%}
+                        {%- assign placeholder_index = forloop.index0 | modulo: 6 | plus: 1 -%}
+                        {{ 'product-' | append: placeholder_index | placeholder_svg_tag: 'glowa-mini-card__placeholder-svg' }}
+                      {%- endif -%}
+                    </div>
+
+                    <h3 class="glowa-mini-card__name">{{ block.settings.name | default: 'Glow Serum' }}</h3>
+
+                    <div class="glowa-mini-card__rating">
+                      <span class="glowa-stars" aria-hidden="true">★★★★</span><span class="glowa-stars glowa-stars--half" aria-hidden="true">★</span>
+                      <span class="glowa-mini-card__rating-value">{{ block.settings.rating | default: '4.4' }}</span>
+                      <span class="glowa-mini-card__review-count">({{ block.settings.review_count | default: '2754' }})</span>
+                    </div>
+
+                    <p class="glowa-mini-card__tags">{{ block.settings.tags | default: 'Oil Control, Brightens, Smooths' }}</p>
+
+                    <div class="glowa-mini-card__meta">
+                      <span class="glowa-mini-card__price">{{ block.settings.price | default: '$6.00 USD' }}</span>
+                      <span class="glowa-mini-card__sizes">
+                        <button type="button" class="glowa-mini-card__size">{{ block.settings.size_one | default: '30ml' }}</button>
+                        <span class="glowa-mini-card__sep" aria-hidden="true">|</span>
+                        <button type="button" class="glowa-mini-card__size is-active">{{ block.settings.size_two | default: '60ml' }}</button>
+                      </span>
+                    </div>
+
+                    <button type="button" class="glowa-mini-card__cta">{{ section.settings.cta_label | default: 'Add To Cart' }}</button>
+                  </article>
+                {%- endif -%}
               {%- endif -%}
-            {%- endif -%}
-          {%- endfor -%}
+            {%- endfor -%}
+
+          {%- endif -%}
         </div>
       </div>
     {%- endfor -%}
@@ -128,6 +234,10 @@
   "class": "glowa-section-bestsellers",
   "settings": [
     {
+      "type": "header",
+      "content": "Tabs"
+    },
+    {
       "type": "text",
       "id": "tab_one_label",
       "label": "Tab 1 label",
@@ -140,6 +250,41 @@
       "default": "New Releases"
     },
     {
+      "type": "header",
+      "content": "Live data (recommended)"
+    },
+    {
+      "type": "collection",
+      "id": "bestsellers_collection",
+      "label": "Bestsellers — collection",
+      "info": "If set, products from this Shopify collection populate the first tab. Static cards below are used as fallback."
+    },
+    {
+      "type": "collection",
+      "id": "new_releases_collection",
+      "label": "New Releases — collection",
+      "info": "If set, products from this Shopify collection populate the second tab."
+    },
+    {
+      "type": "range",
+      "id": "products_per_tab",
+      "label": "Max products per tab",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "card_badge",
+      "label": "Card top-left label (live data)",
+      "default": "Bestseller"
+    },
+    {
+      "type": "header",
+      "content": "Card CTA"
+    },
+    {
       "type": "text",
       "id": "cta_label",
       "label": "Card CTA label",
@@ -149,7 +294,7 @@
   "blocks": [
     {
       "type": "card",
-      "name": "Product card",
+      "name": "Static card (fallback)",
       "settings": [
         {
           "type": "select",
@@ -223,17 +368,10 @@
       "settings": {
         "tab_one_label": "Bestsellers",
         "tab_two_label": "New Releases",
-        "cta_label": "Add To Cart"
-      },
-      "blocks": [
-        { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
-        { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
-        { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
-        { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
-        { "type": "card", "settings": { "tab": "bestsellers",  "name": "Glow Serum" } },
-        { "type": "card", "settings": { "tab": "new-releases", "name": "Glow Serum" } },
-        { "type": "card", "settings": { "tab": "new-releases", "name": "Glow Serum" } }
-      ]
+        "cta_label": "Add To Cart",
+        "card_badge": "Bestseller",
+        "products_per_tab": 5
+      }
     }
   ],
   "enabled_on": {

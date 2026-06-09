@@ -31,11 +31,23 @@
         "badge_text": "Selling fast!",
         "badge_color": "#FF6B8A",
         "shipping_text": "Shipping calculated at checkout.",
-        "description": "Whether organic, natural, or allergy-conscious, every serum, moisturizer, or treatment is clinically effective for every kind of clean beauty routine.",
+        "description": "Beauty of Joseon Dynasty cream is a rich daily moisturizer that provides deep hydration while helping to nourish and maintain the skin's natural balance. Designed for everyday use, it helps improve skin comfort and creates a soft, well-hydrated base for seamless makeup application.",
         "review_count": 3,
         "fallback_price": "$79.00",
+        "fallback_title": "Beauty of Joseon Dynasty cream (50 ml)",
+        "fallback_size": "50ml",
         "urgency_text": "Hurry up, only [count] items left in stock.",
         "stock_threshold": 10
+      }
+    },
+    "product-marquee": {
+      "type": "announcement-bar",
+      "settings": {
+        "text": "For all skin types  ✦  Glow with confidence  ✦  Beauty in simplicity.  ✦  ",
+        "background_color": "#6B6428",
+        "text_color": "#F4EEDC",
+        "speed": 30,
+        "repeat": 6
       }
     },
     "product-recommendations": {
@@ -89,5 +101,5 @@
       }
     }
   },
-  "order": ["product-main", "product-recommendations", "faq-section"]
+  "order": ["product-main", "product-marquee", "product-recommendations", "faq-section"]
 }

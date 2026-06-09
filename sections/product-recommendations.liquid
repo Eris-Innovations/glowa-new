@@ -12,10 +12,14 @@
 {%- liquid
   assign max = section.settings.max_products | default: 4
   assign products_source = empty
+  assign needs_fetch = false
+
   if section.settings.collection != blank
     assign products_source = section.settings.collection.products
   elsif recommendations and recommendations.products_count > 0
     assign products_source = recommendations.products
+  elsif product
+    assign needs_fetch = true
   endif
 -%}
 
@@ -23,6 +27,7 @@
   class="glowa-scope glowa-recs"
   data-glowa-recommendations
   {% if product %}data-product-id="{{ product.id }}" data-limit="{{ max }}" data-section-id="{{ section.id }}"{% endif %}
+  {% if needs_fetch %}data-needs-fetch="true"{% endif %}
 >
   <div class="glowa-container">
     <h2 class="glowa-recs__heading glowa-reveal">{{ section.settings.heading | default: 'You may also like' }}</h2>
@@ -56,7 +61,9 @@
                 {%- if block.settings.image != blank -%}
                   {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', widths: '300,600', alt: block.settings.name }}
                 {%- else -%}
-                  {{ 'product-2' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- assign ph_index = forloop.index0 | modulo: 6 | plus: 1 -%}
+                  {%- assign ph_name = 'product-' | append: ph_index -%}
+                  {{ ph_name | placeholder_svg_tag: 'placeholder-svg' }}
                 {%- endif -%}
               </div>
               <h3 class="glowa-card__name">{{ block.settings.name | default: 'Glow Serum' }}</h3>
