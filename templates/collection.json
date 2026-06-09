@@ -1,32 +1,71 @@
 {
   "sections": {
-    "banner": {
-      "type": "main-collection-banner",
+    "collection-grid": {
+      "type": "collection-grid",
       "settings": {
-        "show_collection_description": true,
-        "show_collection_image": false,
-        "color_scheme": "scheme-1"
+        "products_per_page": 12,
+        "show_description": true,
+        "enable_sorting": true,
+        "sort_label": "Sort by",
+        "card_badge": "Bestseller",
+        "cta_label": "Add To Cart",
+        "fallback_title": "All products",
+        "empty_text": "No products yet — check back soon.",
+        "empty_cta_label": "Back to home"
       }
     },
-    "product-grid": {
-      "type": "main-collection-product-grid",
+    "marquee": {
+      "type": "announcement-bar",
       "settings": {
-        "products_per_page": 16,
-        "columns_desktop": 4,
-        "image_ratio": "adapt",
-        "show_secondary_image": false,
-        "show_vendor": false,
-        "show_rating": false,
-        "enable_filtering": true,
-        "enable_sorting": true,
-        "columns_mobile": "2",
-        "padding_top": 36,
-        "padding_bottom": 36
+        "text": "For all skin types  ✦  Glow with confidence  ✦  Beauty in simplicity.  ✦  ",
+        "background_color": "#6B6428",
+        "text_color": "#F4EEDC",
+        "speed": 30,
+        "repeat": 6
+      }
+    },
+    "faq-section": {
+      "type": "faq-section",
+      "blocks": {
+        "faq-1": {
+          "type": "faq",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "Shipping usually takes 3-7 business days, depending on your location. Expedited shipping options are available for faster delivery. Contact us for any specific shipping inquiries.",
+            "default_open": true
+          }
+        },
+        "faq-2": {
+          "type": "faq",
+          "settings": {
+            "question": "Does my piece come in any packaging?",
+            "answer": "Every GLOWA order is shipped in fully recyclable, signature kraft packaging — designed to look as beautiful as the product inside."
+          }
+        },
+        "faq-3": {
+          "type": "faq",
+          "settings": {
+            "question": "Do you ship internationally?",
+            "answer": "Yes — we ship to over 60 countries. International shipping rates and delivery times are calculated at checkout based on your destination."
+          }
+        },
+        "faq-4": {
+          "type": "faq",
+          "settings": {
+            "question": "What payment methods do you accept?",
+            "answer": "We accept all major credit cards (Visa, Mastercard, American Express, Discover, Diners), PayPal, Apple Pay, Google Pay and Shop Pay."
+          }
+        }
+      },
+      "block_order": ["faq-1", "faq-2", "faq-3", "faq-4"],
+      "settings": {
+        "heading": "We're answerable!",
+        "subtext": "<p>We create safe products that really work and are designed to make you feel good. Any question about our products?</p>",
+        "help_label": "Check if you can find them here",
+        "contact_label": "Contact us",
+        "cta_label": "See More Answers"
       }
     }
   },
-  "order": [
-    "banner",
-    "product-grid"
-  ]
+  "order": ["collection-grid", "marquee", "faq-section"]
 }

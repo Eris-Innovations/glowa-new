@@ -1,0 +1,282 @@
+{%- comment -%}
+  GLOWA — Collection grid.
+
+  Renders the current collection's products in a GLOWA-styled card grid.
+  Pulls live data straight from `collection.products` and supports pagination.
+
+  When loaded on the home/page templates with no collection context, falls
+  back to a merchant-picked collection or the "all" pseudo-collection.
+{%- endcomment -%}
+
+{%- liquid
+  assign per_page = section.settings.products_per_page | default: 12
+
+  assign target = collection
+  if target == blank or target.products_count == 0
+    if section.settings.fallback_collection != blank
+      assign target = section.settings.fallback_collection
+    elsif collections.all and collections.all.products_count > 0
+      assign target = collections.all
+    endif
+  endif
+-%}
+
+<section class="glowa-scope glowa-collection">
+  <div class="glowa-container">
+
+    <header class="glowa-collection__header glowa-reveal">
+      <h1 class="glowa-collection__title">
+        {{- target.title | default: section.settings.fallback_title | default: 'All products' -}}
+      </h1>
+      {%- if section.settings.show_description and target.description != blank -%}
+        <div class="glowa-collection__description">{{ target.description }}</div>
+      {%- endif -%}
+      {%- if target.products_count > 0 -%}
+        <p class="glowa-collection__count">
+          {{ target.products_count }}
+          {%- if target.products_count == 1 -%} product{%- else -%} products{%- endif -%}
+        </p>
+      {%- endif -%}
+    </header>
+
+    {%- if target == blank or target.products_count == 0 -%}
+
+      <div class="glowa-collection__empty">
+        <p>{{ section.settings.empty_text | default: 'No products yet — check back soon.' }}</p>
+        <a href="{{ routes.root_url }}" class="glowa-collection__empty-cta">{{ section.settings.empty_cta_label | default: 'Back to home' }}</a>
+      </div>
+
+    {%- else -%}
+
+      {%- paginate target.products by per_page -%}
+
+        {%- if section.settings.enable_sorting -%}
+          <div class="glowa-collection__toolbar glowa-reveal">
+            <form method="get" class="glowa-collection__sort">
+              <label for="glowa-sort-by">{{ section.settings.sort_label | default: 'Sort by' }}</label>
+              {%- assign current_sort = target.sort_by | default: target.default_sort_by -%}
+              <select name="sort_by" id="glowa-sort-by" onchange="this.form.submit()">
+                <option value="manual" {% if current_sort == 'manual' %}selected{% endif %}>Featured</option>
+                <option value="best-selling" {% if current_sort == 'best-selling' %}selected{% endif %}>Best selling</option>
+                <option value="title-ascending" {% if current_sort == 'title-ascending' %}selected{% endif %}>Alphabetically, A–Z</option>
+                <option value="title-descending" {% if current_sort == 'title-descending' %}selected{% endif %}>Alphabetically, Z–A</option>
+                <option value="price-ascending" {% if current_sort == 'price-ascending' %}selected{% endif %}>Price, low to high</option>
+                <option value="price-descending" {% if current_sort == 'price-descending' %}selected{% endif %}>Price, high to low</option>
+                <option value="created-descending" {% if current_sort == 'created-descending' %}selected{% endif %}>Date, new to old</option>
+                <option value="created-ascending" {% if current_sort == 'created-ascending' %}selected{% endif %}>Date, old to new</option>
+              </select>
+            </form>
+          </div>
+        {%- endif -%}
+
+        <div class="glowa-collection__grid">
+          {%- for cp in target.products -%}
+            {%- assign cp_variant  = cp.selected_or_first_available_variant -%}
+            {%- assign size_option = cp.options_with_values.first -%}
+            {%- assign cp_rating   = cp.metafields.reviews.rating.value | default: '4.4' -%}
+            {%- assign cp_reviews  = cp.metafields.reviews.rating_count.value | default: cp.id | modulo: 5000 -%}
+
+            <article class="glowa-mini-card glowa-reveal" data-glowa-product>
+              <span class="glowa-mini-card__badge">
+                {%- if cp.tags contains 'new' -%}New
+                {%- elsif cp.tags contains 'sale' or cp.compare_at_price > cp.price -%}Sale
+                {%- else -%}{{ section.settings.card_badge | default: 'Bestseller' }}{%- endif -%}
+              </span>
+
+              <button
+                type="button"
+                class="glowa-mini-card__wishlist"
+                aria-label="Add to wishlist"
+                data-product-id="{{ cp.id }}"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                  <path d="M12 21s-7-4.35-9.5-9A5.5 5.5 0 0 1 12 5.5 5.5 5.5 0 0 1 21.5 12c-2.5 4.65-9.5 9-9.5 9z"></path>
+                </svg>
+              </button>
+
+              <a href="{{ cp.url }}" class="glowa-mini-card__media" aria-label="{{ cp.title | escape }}">
+                {%- if cp.featured_image != blank -%}
+                  {{ cp.featured_image | image_url: width: 600 | image_tag:
+                      loading: 'lazy', widths: '300,600', alt: cp.title
+                  }}
+                {%- else -%}
+                  {%- assign placeholder_index = forloop.index0 | modulo: 6 | plus: 1 -%}
+                  {{ 'product-' | append: placeholder_index | placeholder_svg_tag: 'glowa-mini-card__placeholder-svg' }}
+                {%- endif -%}
+              </a>
+
+              <h3 class="glowa-mini-card__name"><a href="{{ cp.url }}">{{ cp.title }}</a></h3>
+
+              <div class="glowa-mini-card__rating">
+                <span class="glowa-stars" aria-hidden="true">★★★★</span><span class="glowa-stars glowa-stars--half" aria-hidden="true">★</span>
+                <span class="glowa-mini-card__rating-value">{{ cp_rating }}</span>
+                <span class="glowa-mini-card__review-count">({{ cp_reviews }})</span>
+              </div>
+
+              {%- if cp.tags.size > 0 -%}
+                <p class="glowa-mini-card__tags">{{ cp.tags | join: ', ' | truncate: 50 }}</p>
+              {%- endif -%}
+
+              <form method="post" action="{{ routes.cart_add_url }}" data-glowa-product-form>
+                <input type="hidden" name="form_type" value="product">
+                <input type="hidden" name="id" value="{{ cp_variant.id }}" data-glowa-variant-id>
+                <input type="hidden" name="quantity" value="1">
+
+                <div class="glowa-mini-card__meta">
+                  <span class="glowa-mini-card__price" data-glowa-price>{{ cp_variant.price | money }}</span>
+                  {%- if size_option != blank and size_option.values.size > 1 -%}
+                    <span class="glowa-mini-card__sizes" data-glowa-size-group>
+                      {%- for v in cp.variants limit: 2 -%}
+                        {%- assign opt_value = v.options.first -%}
+                        <button
+                          type="button"
+                          class="glowa-mini-card__size{% if v.id == cp_variant.id %} is-active{% endif %}"
+                          data-value="{{ opt_value }}"
+                          data-variant-id="{{ v.id }}"
+                          data-price="{{ v.price | money }}"
+                          data-available="{{ v.available }}"
+                        >{{ opt_value }}</button>
+                        {%- unless forloop.last -%}<span class="glowa-mini-card__sep" aria-hidden="true">|</span>{%- endunless -%}
+                      {%- endfor -%}
+                    </span>
+                  {%- endif -%}
+                </div>
+
+                <button type="submit" class="glowa-mini-card__cta" data-glowa-add-to-cart>
+                  {{ section.settings.cta_label | default: 'Add To Cart' }}
+                </button>
+              </form>
+            </article>
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="glowa-collection__pagination" role="navigation" aria-label="Pagination">
+            {%- if paginate.previous -%}
+              <a class="glowa-collection__page glowa-collection__page--nav" href="{{ paginate.previous.url }}" rel="prev">‹ Prev</a>
+            {%- endif -%}
+
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a class="glowa-collection__page" href="{{ part.url }}">{{ part.title }}</a>
+              {%- else -%}
+                {%- if part.title == paginate.current_page -%}
+                  <span class="glowa-collection__page is-active" aria-current="page">{{ part.title }}</span>
+                {%- else -%}
+                  <span class="glowa-collection__page is-disabled">{{ part.title }}</span>
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+
+            {%- if paginate.next -%}
+              <a class="glowa-collection__page glowa-collection__page--nav" href="{{ paginate.next.url }}" rel="next">Next ›</a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+
+      {%- endpaginate -%}
+
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection grid",
+  "tag": "section",
+  "class": "glowa-section-collection",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 4,
+      "max": 48,
+      "step": 4,
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show collection description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "label": "Enable sort dropdown",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "sort_label",
+      "label": "Sort label",
+      "default": "Sort by"
+    },
+    {
+      "type": "header",
+      "content": "Card"
+    },
+    {
+      "type": "text",
+      "id": "card_badge",
+      "label": "Default card badge",
+      "default": "Bestseller"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Card CTA label",
+      "default": "Add To Cart"
+    },
+    {
+      "type": "header",
+      "content": "Fallback"
+    },
+    {
+      "type": "collection",
+      "id": "fallback_collection",
+      "label": "Fallback collection",
+      "info": "Used if there is no collection context (e.g. when this section is added to a Page or Home template)."
+    },
+    {
+      "type": "text",
+      "id": "fallback_title",
+      "label": "Fallback heading",
+      "default": "All products"
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "Empty state text",
+      "default": "No products yet — check back soon."
+    },
+    {
+      "type": "text",
+      "id": "empty_cta_label",
+      "label": "Empty state CTA",
+      "default": "Back to home"
+    }
+  ],
+  "presets": [
+    {
+      "name": "GLOWA Collection grid",
+      "settings": {
+        "products_per_page": 12,
+        "show_description": true,
+        "enable_sorting": true,
+        "card_badge": "Bestseller",
+        "cta_label": "Add To Cart"
+      }
+    }
+  ],
+  "enabled_on": {
+    "templates": ["collection", "page", "index", "search"]
+  }
+}
+{% endschema %}

@@ -2265,3 +2265,191 @@
   }
   .glowa-footer__payments { margin-left: 0; }
 }
+
+/* =================================================================
+   7. COLLECTION GRID
+   ================================================================= */
+.glowa-collection {
+  background: var(--color-white);
+  padding: 56px 0 72px;
+}
+
+.glowa-collection__header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.glowa-collection__title {
+  font-family: var(--font-heading);
+  font-size: clamp(34px, 4vw, 48px);
+  font-weight: 600;
+  color: var(--color-gold);
+  margin: 0 0 12px;
+  letter-spacing: 0.3px;
+  line-height: 1.1;
+}
+
+.glowa-collection__description {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-muted);
+  line-height: 1.7;
+  max-width: 640px;
+  margin: 0 auto 10px;
+}
+
+.glowa-collection__count {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-muted);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.glowa-collection__toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.glowa-collection__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.glowa-collection__sort label {
+  color: var(--color-muted);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.glowa-collection__sort select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--color-bg) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' fill='none' stroke='%23666' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat right 12px center;
+  background-size: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 8px 30px 8px 12px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+
+.glowa-collection__sort select:hover,
+.glowa-collection__sort select:focus {
+  border-color: var(--color-gold);
+  outline: none;
+}
+
+.glowa-collection__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.glowa-collection__empty {
+  text-align: center;
+  padding: 80px 24px;
+  background: var(--color-bg);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.glowa-collection__empty p {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+.glowa-collection__empty-cta {
+  display: inline-block;
+  background: var(--color-gold);
+  color: var(--color-white);
+  padding: 12px 28px;
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  transition: background var(--transition);
+}
+
+.glowa-collection__empty-cta:hover { background: var(--color-gold-dark); }
+
+.glowa-collection__pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 48px;
+  flex-wrap: wrap;
+}
+
+.glowa-collection__page {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-text);
+  padding: 8px 14px;
+  border-radius: 4px;
+  border: 1px solid var(--color-border-light);
+  text-decoration: none;
+  min-width: 40px;
+  text-align: center;
+  transition: all var(--transition);
+}
+
+.glowa-collection__page:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.glowa-collection__page.is-active {
+  background: var(--color-gold);
+  color: var(--color-white);
+  border-color: var(--color-gold);
+}
+
+.glowa-collection__page.is-disabled {
+  color: var(--color-muted);
+  border-color: transparent;
+  cursor: default;
+}
+
+.glowa-collection__page--nav {
+  letter-spacing: 0.4px;
+}
+
+@media (max-width: 1024px) {
+  .glowa-collection__grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .glowa-collection { padding: 36px 0 48px; }
+  .glowa-collection__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .glowa-collection__toolbar { justify-content: flex-start; }
+  .glowa-collection__pagination { gap: 4px; }
+  .glowa-collection__page { padding: 7px 11px; min-width: 36px; font-size: 12px; }
+}
+
+@media (max-width: 480px) {
+  .glowa-collection__grid { grid-template-columns: 1fr; }
+}
