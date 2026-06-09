@@ -26,6 +26,13 @@
                     widths: '300,600',
                     alt: block.settings.label
                 }}
+              {%- elsif block.settings.image_asset != blank -%}
+                <img
+                  src="{{ block.settings.image_asset | asset_url }}"
+                  alt="{{ block.settings.label | escape }}"
+                  loading="lazy"
+                  class="glowa-concern__photo"
+                >
               {%- else -%}
                 <svg class="glowa-concern__placeholder" viewBox="0 0 100 120" aria-hidden="true">
                   <rect x="0" y="0" width="100" height="120" fill="var(--color-bg)"/>
@@ -88,6 +95,12 @@
           "type": "image_picker",
           "id": "image",
           "label": "Portrait image (optional)"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "Theme asset filename",
+          "info": "Falls back to this image inside the assets folder when no image is picked above. e.g. concern-aging.png"
         },
         {
           "type": "url",

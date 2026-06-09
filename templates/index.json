@@ -31,11 +31,11 @@
     "common-concerns": {
       "type": "common-concerns",
       "blocks": {
-        "c-1": { "type": "concern", "settings": { "label": "Aging" } },
-        "c-2": { "type": "concern", "settings": { "label": "Congestion" } },
-        "c-3": { "type": "concern", "settings": { "label": "Texture" } },
-        "c-4": { "type": "concern", "settings": { "label": "Redness" } },
-        "c-5": { "type": "concern", "settings": { "label": "Dryness" } }
+        "c-1": { "type": "concern", "settings": { "label": "Aging", "image_asset": "concern-aging.png" } },
+        "c-2": { "type": "concern", "settings": { "label": "Congestion", "image_asset": "concern-acne.png" } },
+        "c-3": { "type": "concern", "settings": { "label": "Texture", "image_asset": "concern-texture.png" } },
+        "c-4": { "type": "concern", "settings": { "label": "Redness", "image_asset": "concern-redness.png" } },
+        "c-5": { "type": "concern", "settings": { "label": "Dryness", "image_asset": "concern-dryness.png" } }
       },
       "block_order": ["c-1", "c-2", "c-3", "c-4", "c-5"],
       "settings": {
