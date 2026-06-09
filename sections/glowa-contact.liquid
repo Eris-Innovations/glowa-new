@@ -1,0 +1,285 @@
+{%- comment -%}
+  GLOWA — Contact section.
+
+  Split-screen layout:
+   - LEFT: Hero image with overlaid location card (city, address, phone,
+           hours, "Get Directions" button).
+   - RIGHT: Cream panel with "Get in Touch" form (Shopify contact form).
+
+  Fully editable in the theme customizer (image, location text, button URL,
+  form labels, submit copy, color tones).
+{%- endcomment -%}
+
+<section class="glowa-scope glowa-contact">
+  <div class="glowa-contact__inner">
+
+    <div class="glowa-contact__media glowa-reveal">
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 1200 | image_tag:
+            loading: 'lazy', widths: '600,900,1200',
+            alt: section.settings.city | default: 'GLOWA store',
+            class: 'glowa-contact__image'
+        }}
+      {%- else -%}
+        <div class="glowa-contact__placeholder" aria-hidden="true">
+          <svg viewBox="0 0 600 700" preserveAspectRatio="xMidYMid slice" role="img">
+            <defs>
+              <linearGradient id="glowaContactBg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#F4C9CD"/>
+                <stop offset="1" stop-color="#D8A1A6"/>
+              </linearGradient>
+            </defs>
+            <rect width="600" height="700" fill="url(#glowaContactBg)"/>
+            <rect x="40" y="120" width="520" height="180" fill="#fbe4e6" opacity="0.6"/>
+            <rect x="60" y="320" width="180" height="200" fill="#7a3a40" opacity="0.6"/>
+            <rect x="260" y="320" width="180" height="200" fill="#7a3a40" opacity="0.5"/>
+            <rect x="0" y="540" width="600" height="160" fill="#3b2326" opacity="0.5"/>
+          </svg>
+        </div>
+      {%- endif -%}
+
+      <div class="glowa-contact__overlay">
+        {%- if section.settings.city != blank -%}
+          <h2 class="glowa-contact__city">{{ section.settings.city }}</h2>
+        {%- endif -%}
+        {%- if section.settings.address != blank -%}
+          <p class="glowa-contact__line">{{ section.settings.address }}</p>
+        {%- endif -%}
+        {%- if section.settings.phone != blank -%}
+          <p class="glowa-contact__line">{{ section.settings.phone }}</p>
+        {%- endif -%}
+        {%- if section.settings.hours != blank -%}
+          <p class="glowa-contact__line">{{ section.settings.hours }}</p>
+        {%- endif -%}
+        {%- if section.settings.directions_label != blank -%}
+          <a
+            class="glowa-contact__directions"
+            href="{{ section.settings.directions_url | default: '#' }}"
+            {% if section.settings.directions_url contains 'http' %}target="_blank" rel="noopener"{% endif %}
+          >
+            {{ section.settings.directions_label }}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="glowa-contact__panel glowa-reveal">
+      <h3 class="glowa-contact__heading">{{ section.settings.heading | default: 'Get in Touch' }}</h3>
+
+      {%- form 'contact', class: 'glowa-contact__form', id: 'glowa-contact-form' -%}
+        {%- if form.posted_successfully? -%}
+          <p class="glowa-contact__success">
+            {{ section.settings.success_message | default: 'Thanks! Your message has been sent.' }}
+          </p>
+        {%- endif -%}
+
+        {%- if form.errors -%}
+          <div class="glowa-contact__errors" role="alert">
+            <p>{{ 'templates.contact.form.error_heading' | t | default: 'Please fix the following:' }}</p>
+            <ul>
+              {%- for field in form.errors -%}
+                <li>{{ form.errors.messages[field] }}</li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+        <div class="glowa-contact__row">
+          <label class="glowa-contact__field">
+            <span class="glowa-contact__label">{{ section.settings.label_name | default: 'Name' }}</span>
+            <input
+              type="text"
+              name="contact[{{ 'templates.contact.form.name' | t }}]"
+              placeholder="{{ section.settings.placeholder_name | default: 'Name' }}"
+              value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+              autocomplete="name"
+            >
+          </label>
+
+          <label class="glowa-contact__field">
+            <span class="glowa-contact__label">{{ section.settings.label_email | default: 'Email' }} <span aria-hidden="true">*</span></span>
+            <input
+              type="email"
+              name="contact[email]"
+              placeholder="{{ section.settings.placeholder_email | default: 'Email' }}"
+              value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+              autocomplete="email"
+              required
+              aria-required="true"
+            >
+          </label>
+        </div>
+
+        <label class="glowa-contact__field glowa-contact__field--full">
+          <span class="glowa-contact__label">{{ section.settings.label_phone | default: 'Phone' }}</span>
+          <input
+            type="tel"
+            name="contact[{{ 'templates.contact.form.phone' | t }}]"
+            placeholder="{{ section.settings.placeholder_phone | default: 'Phone' }}"
+            value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+            autocomplete="tel"
+          >
+        </label>
+
+        <label class="glowa-contact__field glowa-contact__field--full">
+          <span class="glowa-contact__label">{{ section.settings.label_message | default: 'Your message' }}</span>
+          <textarea
+            name="contact[body]"
+            rows="5"
+            placeholder="{{ section.settings.placeholder_message | default: 'Your message' }}"
+          >{% if form.body %}{{ form.body }}{% endif %}</textarea>
+        </label>
+
+        <button type="submit" class="glowa-contact__submit">
+          {{ section.settings.submit_label | default: 'Submit Now' }}
+        </button>
+      {%- endform -%}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "GLOWA Contact",
+  "tag": "section",
+  "class": "glowa-section-contact",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Location image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "header",
+      "content": "Location card"
+    },
+    {
+      "type": "text",
+      "id": "city",
+      "label": "City",
+      "default": "New York"
+    },
+    {
+      "type": "text",
+      "id": "address",
+      "label": "Address line",
+      "default": "4b/39 James St, Fortitude Valley QLD 4006"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone",
+      "default": "+391 (0)35 2568"
+    },
+    {
+      "type": "text",
+      "id": "hours",
+      "label": "Hours",
+      "default": "Mon-Sat: 10am-8pm"
+    },
+    {
+      "type": "text",
+      "id": "directions_label",
+      "label": "Directions button",
+      "default": "Get Directions"
+    },
+    {
+      "type": "url",
+      "id": "directions_url",
+      "label": "Directions URL"
+    },
+    {
+      "type": "header",
+      "content": "Form"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get in Touch"
+    },
+    {
+      "type": "text",
+      "id": "label_name",
+      "label": "Name label",
+      "default": "Name"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_name",
+      "label": "Name placeholder",
+      "default": "Name"
+    },
+    {
+      "type": "text",
+      "id": "label_email",
+      "label": "Email label",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_email",
+      "label": "Email placeholder",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "label_phone",
+      "label": "Phone label",
+      "default": "Phone"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_phone",
+      "label": "Phone placeholder",
+      "default": "Phone"
+    },
+    {
+      "type": "text",
+      "id": "label_message",
+      "label": "Message label",
+      "default": "Your message"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_message",
+      "label": "Message placeholder",
+      "default": "Your message"
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Submit button label",
+      "default": "Submit Now"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thanks! Your message has been sent."
+    }
+  ],
+  "presets": [
+    {
+      "name": "GLOWA Contact",
+      "settings": {
+        "city": "New York",
+        "address": "4b/39 James St, Fortitude Valley QLD 4006",
+        "phone": "+391 (0)35 2568",
+        "hours": "Mon-Sat: 10am-8pm",
+        "directions_label": "Get Directions",
+        "heading": "Get in Touch",
+        "submit_label": "Submit Now"
+      }
+    }
+  ],
+  "enabled_on": {
+    "templates": ["page", "index"]
+  }
+}
+{% endschema %}

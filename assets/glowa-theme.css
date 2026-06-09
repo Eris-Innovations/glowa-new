@@ -2453,3 +2453,236 @@
 @media (max-width: 480px) {
   .glowa-collection__grid { grid-template-columns: 1fr; }
 }
+
+/* =================================================================
+   8. CONTACT PAGE
+   ================================================================= */
+.glowa-contact {
+  background: var(--color-white);
+}
+
+.glowa-contact__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 640px;
+}
+
+.glowa-contact__media {
+  position: relative;
+  overflow: hidden;
+  background: #d8a1a6;
+}
+
+.glowa-contact__image,
+.glowa-contact__placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.glowa-contact__placeholder svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.glowa-contact__overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 36px 40px;
+  color: var(--color-white);
+  font-family: var(--font-body);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.55) 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.glowa-contact__city {
+  font-family: var(--font-heading);
+  font-size: 38px;
+  font-weight: 600;
+  margin: 0 0 8px;
+  letter-spacing: 0.4px;
+  line-height: 1;
+  color: var(--color-white);
+}
+
+.glowa-contact__line {
+  font-size: 14px;
+  margin: 0;
+  letter-spacing: 0.2px;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.glowa-contact__directions {
+  display: inline-block;
+  margin-top: 12px;
+  background: var(--color-white);
+  color: var(--color-text);
+  padding: 11px 22px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  border-radius: 2px;
+  align-self: flex-start;
+  transition: background var(--transition), color var(--transition);
+}
+
+.glowa-contact__directions:hover {
+  background: var(--color-bg);
+  color: var(--color-gold);
+}
+
+.glowa-contact__panel {
+  background: #F1E4C2;
+  padding: 56px 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.glowa-contact__heading {
+  font-family: var(--font-heading);
+  font-size: clamp(34px, 3.5vw, 44px);
+  font-weight: 600;
+  color: var(--color-gold);
+  text-align: center;
+  margin: 0 0 32px;
+  line-height: 1;
+  letter-spacing: 0.4px;
+}
+
+.glowa-contact__form {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.glowa-contact__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.glowa-contact__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--font-body);
+}
+
+.glowa-contact__label {
+  font-size: 13px;
+  color: var(--color-text);
+  letter-spacing: 0.2px;
+}
+
+.glowa-contact__field input,
+.glowa-contact__field textarea {
+  background: var(--color-white);
+  border: 1px solid transparent;
+  border-radius: 3px;
+  padding: 10px 14px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-text);
+  width: 100%;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.glowa-contact__field input::placeholder,
+.glowa-contact__field textarea::placeholder {
+  color: var(--color-muted-3);
+}
+
+.glowa-contact__field input:focus,
+.glowa-contact__field textarea:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(184, 150, 12, 0.12);
+}
+
+.glowa-contact__field textarea {
+  resize: vertical;
+  min-height: 110px;
+  font-family: var(--font-body);
+}
+
+.glowa-contact__submit {
+  margin-top: 8px;
+  background: #2C2812;
+  color: var(--color-white);
+  border: none;
+  padding: 13px 38px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  border-radius: 3px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.glowa-contact__submit:hover {
+  background: #1a160a;
+  transform: translateY(-1px);
+}
+
+.glowa-contact__success {
+  background: rgba(184, 150, 12, 0.14);
+  color: var(--color-gold-dark);
+  border: 1px solid rgba(184, 150, 12, 0.3);
+  padding: 12px 16px;
+  border-radius: 3px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  margin: 0;
+}
+
+.glowa-contact__errors {
+  background: rgba(220, 60, 60, 0.08);
+  color: #a13a3a;
+  border: 1px solid rgba(220, 60, 60, 0.25);
+  padding: 12px 16px;
+  border-radius: 3px;
+  font-family: var(--font-body);
+  font-size: 13px;
+}
+
+.glowa-contact__errors p { margin: 0 0 6px; font-weight: 500; }
+.glowa-contact__errors ul { margin: 0; padding-left: 18px; }
+.glowa-contact__errors li { margin-bottom: 2px; }
+
+@media (max-width: 1024px) {
+  .glowa-contact__panel { padding: 48px 36px; }
+  .glowa-contact__overlay { padding: 28px 28px; }
+}
+
+@media (max-width: 768px) {
+  .glowa-contact__inner {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .glowa-contact__media {
+    aspect-ratio: 4 / 3;
+    min-height: 360px;
+  }
+  .glowa-contact__panel {
+    padding: 40px 24px;
+  }
+  .glowa-contact__row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .glowa-contact__heading { margin-bottom: 24px; }
+  .glowa-contact__city { font-size: 30px; }
+}
