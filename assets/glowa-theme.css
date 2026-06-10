@@ -974,6 +974,8 @@
 .glowa-promo-banner__heading {
   grid-column: 1;
   grid-row: 1;
+  position: relative;
+  z-index: 2;
   font-family: var(--font-heading);
   font-size: clamp(28px, 3.6vw, 40px);
   font-weight: 500;
@@ -984,22 +986,31 @@
 
 .glowa-promo-banner__media {
   grid-column: 1 / span 2;
-  grid-row: 2;
+  grid-row: 1 / span 3;
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
+  display: block;
   pointer-events: none;
+  z-index: 0;
+  border-radius: inherit;
+  overflow: hidden;
   padding: 32px 36px;
 }
 
-.glowa-promo-banner__img,
+.glowa-promo-banner__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
 .glowa-promo-banner__placeholder {
-  max-width: 70%;
-  max-height: 92%;
-  object-fit: contain;
-  margin-right: -4%;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .glowa-promo-banner__cta {
@@ -1007,6 +1018,8 @@
   grid-row: 3;
   justify-self: end;
   align-self: end;
+  position: relative;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   padding: 10px 24px;
@@ -2596,24 +2609,29 @@
   color: rgba(255, 255, 255, 0.92);
 }
 
-.glowa-contact__directions {
+.glowa-scope .glowa-contact__directions,
+a.glowa-contact__directions {
   display: inline-block;
   margin-top: 12px;
-  background: var(--color-white);
-  color: var(--color-text);
+  background: #ffffff;
+  color: #1A1A1A;
   padding: 11px 22px;
   font-family: var(--font-body);
   font-size: 13px;
+  font-weight: 500;
   letter-spacing: 0.5px;
   text-decoration: none;
   border-radius: 2px;
   align-self: flex-start;
+  border: 0;
   transition: background var(--transition), color var(--transition);
 }
 
-.glowa-contact__directions:hover {
-  background: var(--color-bg);
-  color: var(--color-gold);
+.glowa-scope .glowa-contact__directions:hover,
+a.glowa-contact__directions:hover {
+  background: #f6efe2;
+  color: #B8960C;
+  text-decoration: none;
 }
 
 .glowa-contact__panel {
