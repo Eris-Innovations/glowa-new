@@ -63,7 +63,8 @@
         "subtext": "<p>We create safe products that really work and are designed to make you feel good. Any question about our products?</p>",
         "help_label": "Check if you can find them here",
         "contact_label": "Contact us",
-        "cta_label": "See More Answers"
+        "cta_label": "See More Answers",
+        "image_asset": "faq-product.png"
       }
     }
   },

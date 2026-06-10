@@ -19,6 +19,8 @@
     "bestsellers": {
       "type": "bestsellers",
       "settings": {
+        "banner_asset": "bestsellers-banner.png",
+        "banner_alt": "GLOWA bestseller products lineup",
         "tab_one_label": "Bestsellers",
         "tab_two_label": "New Releases",
         "bestsellers_collection": "bestsellers",
@@ -67,6 +69,7 @@
             "label": "Verified Customer",
             "rating": 4,
             "body": "Each Puff product is meticulously crafted, infused with the finest botanicals and scientifically-backed actives, all working in harmony to unveil your most radiant self. Embrace the Puff experience, and discover the art of beautiful self-love. Because you deserve to be pampered, cherished, and absolutely radiant.",
+            "photo_asset": "testimonial-1.png",
             "product_name": "Cream",
             "product_price": "$60.00"
           }
@@ -78,6 +81,7 @@
             "label": "Verified Customer",
             "rating": 4,
             "body": "Each Puff product is meticulously crafted, infused with the finest botanicals and scientifically-backed actives, all working in harmony to unveil your most radiant self. Embrace the Puff experience, and discover the art of beautiful self-love. Because you deserve to be pampered, cherished, and absolutely radiant.",
+            "photo_asset": "testimonial-2.png",
             "product_name": "Glow Serum",
             "product_price": "$60.00"
           }
@@ -132,7 +136,8 @@
         "subtext": "<p>We create safe products that really work and are designed to make you feel good. Any question about our products?</p>",
         "help_label": "Check if you can find them here",
         "contact_label": "Contact us",
-        "cta_label": "See More Answers"
+        "cta_label": "See More Answers",
+        "image_asset": "faq-product.png"
       }
     }
   },

@@ -40,7 +40,11 @@
       {%- for block in section.blocks -%}
         {%- if block.type == 'testimonial' -%}
           {%- assign rating = block.settings.rating | default: 5 | at_most: 5 | at_least: 0 -%}
-          <article class="glowa-testimonial glowa-reveal{% if block.settings.photo == blank %} glowa-testimonial--no-photo{% endif %}" {{ block.shopify_attributes }}>
+          {%- assign has_photo = false -%}
+          {%- if block.settings.photo != blank or block.settings.photo_asset != blank -%}
+            {%- assign has_photo = true -%}
+          {%- endif -%}
+          <article class="glowa-testimonial glowa-reveal{% unless has_photo %} glowa-testimonial--no-photo{% endunless %}" {{ block.shopify_attributes }}>
             <div class="glowa-testimonial__photo">
               {%- if block.settings.photo != blank -%}
                 {{ block.settings.photo | image_url: width: 800 | image_tag:
@@ -49,6 +53,15 @@
                     sizes: '(max-width: 768px) 80vw, 22vw',
                     alt: block.settings.name
                 }}
+              {%- elsif block.settings.photo_asset != blank -%}
+                <img
+                  src="{{ block.settings.photo_asset | asset_url }}"
+                  alt="{{ block.settings.name | escape }}"
+                  loading="lazy"
+                  width="600"
+                  height="800"
+                  sizes="(max-width: 768px) 80vw, 22vw"
+                >
               {%- else -%}
                 <svg class="glowa-testimonial__placeholder" viewBox="0 0 260 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
                   <rect width="260" height="320" rx="24" fill="#FBF7EE"/>
@@ -187,6 +200,12 @@
           "type": "image_picker",
           "id": "photo",
           "label": "Portrait photo (optional)"
+        },
+        {
+          "type": "text",
+          "id": "photo_asset",
+          "label": "Portrait — theme asset filename",
+          "info": "Falls back to this image inside the assets folder when no portrait is picked above. e.g. testimonial-1.png"
         },
         {
           "type": "image_picker",

@@ -50,6 +50,28 @@
 <section class="glowa-scope glowa-bestsellers" data-glowa-tabs>
   <div class="glowa-container">
 
+    {%- if section.settings.banner_image != blank or section.settings.banner_asset != blank -%}
+      <div class="glowa-bestsellers__banner glowa-reveal">
+        {%- if section.settings.banner_image != blank -%}
+          {{ section.settings.banner_image | image_url: width: 2000 | image_tag:
+              loading: 'lazy',
+              widths: '800,1200,1600,2000',
+              alt: section.settings.banner_alt | default: 'GLOWA bestseller products lineup',
+              class: 'glowa-bestsellers__banner-img'
+          }}
+        {%- else -%}
+          <img
+            src="{{ section.settings.banner_asset | asset_url }}"
+            alt="{{ section.settings.banner_alt | default: 'GLOWA bestseller products lineup' | escape }}"
+            loading="lazy"
+            width="2000"
+            height="950"
+            class="glowa-bestsellers__banner-img"
+          >
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
     <div class="glowa-bestsellers__tabs" role="tablist">
       <button
         type="button"
@@ -275,6 +297,27 @@
   "tag": "section",
   "class": "glowa-section-bestsellers",
   "settings": [
+    {
+      "type": "header",
+      "content": "Hero banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Banner image"
+    },
+    {
+      "type": "text",
+      "id": "banner_asset",
+      "label": "Theme asset filename",
+      "info": "Falls back to this image inside the assets folder when no image is picked above. e.g. bestsellers-banner.png"
+    },
+    {
+      "type": "text",
+      "id": "banner_alt",
+      "label": "Banner alt text",
+      "default": "GLOWA bestseller products lineup"
+    },
     {
       "type": "header",
       "content": "Tabs"
