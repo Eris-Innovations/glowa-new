@@ -4,7 +4,7 @@
    so we never collide with Dawn's base styles.
    ================================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Jost:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 :root {
   --color-bg: #F5F0EA;
@@ -18,8 +18,8 @@
   --color-border-light: #EEEEEE;
   --color-white: #FFFFFF;
   --color-pink: #FF6B8A;
-  --font-heading: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Playfair Display', serif;
   --border-radius: 6px;
   --transition: 0.2s ease;
   --max-width: 1320px;
@@ -215,16 +215,16 @@
   font-weight: 400;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: var(--color-text);
+  color: #CFBE79;
   padding-bottom: 4px;
   position: relative;
 }
 
-.glowa-header__nav a:hover { color: var(--color-gold); }
+.glowa-header__nav a:hover { color: #BCA858; }
 
 .glowa-header__nav a.is-active {
   font-weight: 600;
-  color: var(--color-text);
+  color: #BCA858;
 }
 
 .glowa-header__nav a.is-active::after {
@@ -248,17 +248,19 @@
   background: none;
   border: 0;
   padding: 0;
-  color: var(--color-text);
+  color: #CFBE79 !important;
   display: inline-flex;
   align-items: center;
   position: relative;
 }
 
-.glowa-header__action:hover { color: var(--color-gold); }
+.glowa-header__action:hover { color: #CFBE79 !important; }
 
 .glowa-header__action svg {
   width: 22px;
   height: 22px;
+  color: #CFBE79 !important;
+  stroke: #CFBE79 !important;
 }
 
 .glowa-header__cart-count {
@@ -462,7 +464,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: var(--glowa-hero-accent, var(--color-gold));
+  background: #CFBE79;
   color: var(--color-white);
   padding: 12px 28px;
   border-radius: 3px;
@@ -477,7 +479,8 @@
 }
 
 .glowa-hero__cta:hover {
-  filter: brightness(0.9);
+  background: #CFBE79;
+  filter: none;
   transform: translateY(-1px);
 }
 
@@ -547,17 +550,17 @@
   font-family: var(--font-heading);
   font-size: 28px;
   font-weight: 500;
-  color: var(--color-muted-3);
+  color: #CFBE79;
   cursor: pointer;
   position: relative;
   transition: color var(--transition);
   letter-spacing: 0.2px;
 }
 
-.glowa-bestsellers__tab:hover { color: var(--color-text); }
+.glowa-bestsellers__tab:hover { color: #CFBE79; }
 
 .glowa-bestsellers__tab.is-active {
-  color: var(--color-text);
+  color: #CFBE79;
 }
 
 .glowa-bestsellers__tab.is-active::after {
@@ -567,7 +570,7 @@
   right: 20%;
   bottom: -1px;
   height: 2px;
-  background: var(--color-gold);
+  background: #CFBE79;
 }
 
 .glowa-bestsellers__count {
@@ -765,9 +768,9 @@
   margin-top: auto;
   width: 100%;
   height: 38px;
-  border: 1px solid var(--color-text);
-  background: var(--color-white);
-  color: var(--color-text);
+  border: 1px solid #CFBE79;
+  background: #CFBE79;
+  color: var(--color-white);
   font-family: var(--font-body);
   font-size: 12px;
   letter-spacing: 0.4px;
@@ -777,7 +780,7 @@
 }
 
 .glowa-mini-card__cta:hover {
-  background: var(--color-text);
+  background: #CFBE79;
   color: var(--color-white);
 }
 
@@ -819,12 +822,13 @@
 }
 
 .glowa-concerns__heading {
-  font-family: var(--font-heading);
-  font-size: 32px;
-  font-weight: 500;
-  color: #6B6428;
+  font-family: 'Playfair Display', serif !important;
+  font-size: 36px !important;
+  font-weight: 700 !important;
+  line-height: 40px !important;
+  color: #BCA858 !important;
   margin: 0 0 6px;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.5% !important;
 }
 
 .glowa-concerns__sub {
@@ -895,7 +899,14 @@
 
 @media (max-width: 768px) {
   .glowa-concerns { padding: 36px 0 40px; }
-  .glowa-concerns__heading { font-size: 26px; }
+  .glowa-concerns__heading {
+    font-family: 'Playfair Display', serif !important;
+    font-size: 36px !important;
+    font-weight: 700 !important;
+    line-height: 40px !important;
+    color: #BCA858 !important;
+    letter-spacing: 0.5% !important;
+  }
   .glowa-concerns__grid {
     display: flex;
     overflow-x: auto;
@@ -1013,24 +1024,24 @@
    2f. TESTIMONIALS CAROUSEL
    ================================================================= */
 .glowa-testimonials {
-  padding: 56px 0 64px;
-  background: var(--color-white);
+  padding: 72px 0 80px;
+  background: linear-gradient(180deg, #fffdfa 0%, #fffefb 100%);
 }
 
 .glowa-testimonials__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 28px;
+  gap: 24px;
+  margin-bottom: 36px;
 }
 
 .glowa-testimonials__heading {
   font-family: var(--font-heading);
-  font-size: clamp(28px, 3.6vw, 38px);
-  font-weight: 500;
+  font-size: clamp(32px, 3.8vw, 44px);
+  font-weight: 600;
   margin: 0;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.01em;
   color: var(--color-text);
 }
 
@@ -1044,22 +1055,24 @@
 }
 
 .glowa-testimonials__nav-btn {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  border: 1px solid var(--color-border-light);
+  border: 1px solid rgba(188, 168, 88, 0.35);
   background: var(--color-white);
-  color: var(--color-text);
+  color: #bca858;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background var(--transition), border-color var(--transition), color var(--transition);
+  transition: background var(--transition), border-color var(--transition), color var(--transition), transform var(--transition);
 }
 
 .glowa-testimonials__nav-btn:hover {
-  border-color: var(--color-gold);
-  color: var(--color-gold);
+  border-color: #bca858;
+  color: #ffffff;
+  background: #cfbe79;
+  transform: translateY(-1px);
 }
 
 .glowa-testimonials__nav-btn:disabled {
@@ -1068,20 +1081,20 @@
 }
 
 .glowa-testimonials__nav-btn svg {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
 }
 
 .glowa-testimonials__track {
   display: flex;
-  gap: 20px;
+  gap: 28px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  padding-bottom: 8px;
-  margin: 0 -8px;
-  padding-left: 8px;
-  padding-right: 8px;
+  padding-bottom: 12px;
+  margin: 0 -12px;
+  padding-left: 12px;
+  padding-right: 12px;
 }
 
 .glowa-testimonials__track::-webkit-scrollbar { display: none; }
@@ -1089,19 +1102,21 @@
 
 .glowa-testimonial {
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: minmax(220px, 250px) 1fr;
   gap: 0;
   flex: 0 0 calc(50% - 10px);
   scroll-snap-align: start;
   background: transparent;
+  align-items: stretch;
 }
 
 .glowa-testimonial__photo {
   position: relative;
-  border-radius: 6px;
+  border-radius: 18px;
   overflow: hidden;
   background: var(--color-bg);
   aspect-ratio: 0.75 / 1;
+  box-shadow: inset 0 0 0 1px rgba(188, 168, 88, 0.08);
 }
 
 .glowa-testimonial__photo img,
@@ -1114,28 +1129,49 @@
 }
 
 .glowa-testimonial__card {
-  background: var(--color-white);
-  border: 1px solid var(--color-border-light);
-  border-radius: 6px;
-  padding: 18px 18px 16px;
-  margin-left: -16px;
-  margin-top: 16px;
-  margin-bottom: 16px;
+  background: #fffdfa;
+  border: 1px solid rgba(188, 168, 88, 0.14);
+  border-radius: 18px;
+  padding: 24px 24px 20px;
+  margin-left: -22px;
+  margin-top: 18px;
+  margin-bottom: 18px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.04);
+  gap: 16px;
+  box-shadow: 0 18px 40px rgba(69, 53, 18, 0.08);
+}
+
+.glowa-testimonial--no-photo {
+  grid-template-columns: minmax(170px, 210px) 1fr;
+}
+
+.glowa-testimonial--no-photo .glowa-testimonial__photo {
+  aspect-ratio: 0.72 / 1;
+  background: linear-gradient(145deg, #fbf7ee 0%, #f1e7d2 100%);
+}
+
+.glowa-testimonial--no-photo .glowa-testimonial__card {
+  margin-left: -14px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.glowa-testimonial__placeholder {
+  border-radius: inherit;
 }
 
 .glowa-testimonial__avatar-row {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.08);
 }
 
 .glowa-testimonial__avatar {
-  width: 38px;
-  height: 38px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   overflow: hidden;
   background: var(--color-bg);
@@ -1158,26 +1194,26 @@
 
 .glowa-testimonial__name {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 600;
   color: var(--color-text);
 }
 
 .glowa-testimonial__verified {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 13px;
   color: var(--color-muted);
   margin-top: 2px;
 }
 
 .glowa-testimonial__stars {
   display: inline-flex;
-  gap: 2px;
-  font-size: 14px;
+  gap: 3px;
+  font-size: 18px;
   letter-spacing: 2px;
   color: var(--color-border);
-  border-bottom: 1px solid var(--color-border-light);
-  padding-bottom: 8px;
+  border-bottom: 0;
+  padding-bottom: 0;
 }
 
 .glowa-testimonial__star.is-filled {
@@ -1186,9 +1222,9 @@
 
 .glowa-testimonial__text {
   font-family: var(--font-body);
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--color-muted);
+  font-size: 15px;
+  line-height: 1.75;
+  color: #4f4740;
   margin: 0;
 }
 
@@ -1196,20 +1232,20 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  background: var(--color-bg);
-  border-radius: 4px;
-  padding: 10px 12px;
+  background: #f7f2e8;
+  border-radius: 14px;
+  padding: 12px 14px;
   margin-top: auto;
 }
 
 .glowa-testimonial__product-icon {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: var(--color-white);
-  border-radius: 4px;
+  border-radius: 10px;
   flex-shrink: 0;
 }
 
@@ -1228,21 +1264,21 @@
 
 .glowa-testimonial__product-name {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--color-text);
 }
 
 .glowa-testimonial__product-price {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 13px;
   color: var(--color-muted);
   margin-top: 2px;
 }
 
 @media (max-width: 768px) {
-  .glowa-testimonials { padding: 36px 0 40px; }
-  .glowa-testimonials__heading { font-size: 24px; }
+  .glowa-testimonials { padding: 44px 0 48px; }
+  .glowa-testimonials__heading { font-size: 30px; }
   .glowa-testimonial {
     grid-template-columns: 140px 1fr;
     flex: 0 0 86%;
@@ -1251,7 +1287,10 @@
     margin-left: -12px;
     margin-top: 12px;
     margin-bottom: 12px;
-    padding: 14px;
+    padding: 16px;
+  }
+  .glowa-testimonial--no-photo {
+    grid-template-columns: 110px 1fr;
   }
 }
 
@@ -1757,9 +1796,9 @@
   margin-top: 12px;
   width: 100%;
   height: 40px;
-  border: 1px solid var(--color-text);
-  background: var(--color-white);
-  color: var(--color-text);
+  border: 1px solid #CFBE79;
+  background: #CFBE79;
+  color: #ffffff;
   font-family: var(--font-body);
   font-size: 13px;
   letter-spacing: 1px;
@@ -1770,8 +1809,8 @@
 }
 
 .glowa-card__cta:hover {
-  background: var(--color-text);
-  color: var(--color-white);
+  background: #CFBE79;
+  color: #ffffff;
 }
 
 @media (max-width: 768px) {

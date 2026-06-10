@@ -14,6 +14,14 @@
   assign bs_collection = section.settings.bestsellers_collection
   assign nr_collection = section.settings.new_releases_collection
 
+  if bs_collection == blank
+    assign bs_collection = collections['all']
+  endif
+
+  if nr_collection == blank
+    assign nr_collection = collections['all']
+  endif
+
   assign bs_count = 0
   assign nr_count = 0
   if bs_collection != blank
@@ -86,8 +94,13 @@
         <div class="glowa-bestsellers__grid">
 
           {%- if tab_collection != blank and tab_collection.products_count > 0 -%}
+            {%- if tab == 'new-releases' -%}
+              {%- assign tab_products = tab_collection.products | sort: 'published_at' | reverse -%}
+            {%- else -%}
+              {%- assign tab_products = tab_collection.products -%}
+            {%- endif -%}
             {%- assign rendered = 0 -%}
-            {%- for cp in tab_collection.products -%}
+            {%- for cp in tab_products -%}
               {%- if rendered >= max -%}{%- break -%}{%- endif -%}
               {%- assign rendered = rendered | plus: 1 -%}
               {%- assign cp_variant   = cp.selected_or_first_available_variant -%}
@@ -226,6 +239,35 @@
     {%- endfor -%}
   </div>
 </section>
+
+<script>
+  (() => {
+    const wraps = document.querySelectorAll('[data-glowa-tabs]');
+    wraps.forEach((wrap) => {
+      const tabs = Array.from(wrap.querySelectorAll('[data-glowa-tab]'));
+      const panels = Array.from(wrap.querySelectorAll('[data-glowa-tab-panel]'));
+      if (!tabs.length || !panels.length) return;
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const target = tab.dataset.glowaTab;
+
+          tabs.forEach((item) => {
+            const active = item === tab;
+            item.classList.toggle('is-active', active);
+            item.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+
+          panels.forEach((panel) => {
+            const active = panel.dataset.glowaTabPanel === target;
+            panel.classList.toggle('is-active', active);
+            panel.hidden = !active;
+          });
+        });
+      });
+    });
+  })();
+</script>
 
 {% schema %}
 {

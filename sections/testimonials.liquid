@@ -40,7 +40,7 @@
       {%- for block in section.blocks -%}
         {%- if block.type == 'testimonial' -%}
           {%- assign rating = block.settings.rating | default: 5 | at_most: 5 | at_least: 0 -%}
-          <article class="glowa-testimonial glowa-reveal" {{ block.shopify_attributes }}>
+          <article class="glowa-testimonial glowa-reveal{% if block.settings.photo == blank %} glowa-testimonial--no-photo{% endif %}" {{ block.shopify_attributes }}>
             <div class="glowa-testimonial__photo">
               {%- if block.settings.photo != blank -%}
                 {{ block.settings.photo | image_url: width: 800 | image_tag:
@@ -50,11 +50,20 @@
                     alt: block.settings.name
                 }}
               {%- else -%}
-                <svg class="glowa-testimonial__placeholder" viewBox="0 0 200 280" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-                  <rect width="200" height="280" fill="var(--color-bg)"/>
-                  <circle cx="100" cy="105" r="38" fill="rgba(184, 150, 12, 0.18)"/>
-                  <path d="M40 280 Q40 200 100 200 Q160 200 160 280 Z" fill="rgba(184, 150, 12, 0.18)"/>
-                  <text x="100" y="270" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="14" font-style="italic" fill="rgba(107, 100, 40, 0.55)">{{ block.settings.name | slice: 0 | upcase }}</text>
+                <svg class="glowa-testimonial__placeholder" viewBox="0 0 260 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="testimonial-placeholder-bg-{{ block.id }}" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#FBF7EE"/>
+                      <stop offset="100%" stop-color="#F1E7D2"/>
+                    </linearGradient>
+                  </defs>
+                  <rect width="260" height="320" rx="24" fill="url(#testimonial-placeholder-bg-{{ block.id }})"/>
+                  <text x="32" y="86" font-family="Playfair Display, serif" font-size="88" font-weight="700" fill="rgba(188, 168, 88, 0.16)">“</text>
+                  <circle cx="130" cy="138" r="42" fill="rgba(188, 168, 88, 0.18)"/>
+                  <path d="M56 320 Q56 220 130 220 Q204 220 204 320 Z" fill="rgba(188, 168, 88, 0.14)"/>
+                  <text x="130" y="202" text-anchor="middle" font-family="Playfair Display, serif" font-size="26" font-weight="700" fill="rgba(107, 100, 40, 0.65)">{{ block.settings.name | slice: 0 | upcase }}</text>
+                  <text x="32" y="284" font-family="Playfair Display, serif" font-size="18" font-weight="600" fill="rgba(107, 100, 40, 0.8)">Customer Review</text>
+                  <text x="32" y="306" font-family="Playfair Display, serif" font-size="14" fill="rgba(107, 100, 40, 0.58)">Glowa Community</text>
                 </svg>
               {%- endif -%}
             </div>

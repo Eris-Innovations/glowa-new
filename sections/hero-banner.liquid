@@ -72,10 +72,26 @@
   }
 
   .hero-banner__button.button {
+    --color-button: 207, 190, 121;
+    --color-button-text: 255, 255, 255;
     min-width: 18rem;
-    background: #c7b04f;
-    color: #fffef8;
+    background-color: #cfbe79 !important;
+    background: #cfbe79 !important;
+    color: #ffffff !important;
     border: 0;
+  }
+
+  .hero-banner__button.button::before {
+    box-shadow: none !important;
+  }
+
+  .hero-banner__button.button::after,
+  .hero-banner__button.button:hover::after,
+  .hero-banner__button.button:focus-visible::after {
+    background: #cfbe79 !important;
+    box-shadow: 0 0 0 calc(var(--buttons-border-width) + var(--border-offset))
+        rgba(255, 255, 255, 0),
+      0 0 0 var(--buttons-border-width) rgba(207, 190, 121, 1);
   }
 
   .hero-banner__media {
