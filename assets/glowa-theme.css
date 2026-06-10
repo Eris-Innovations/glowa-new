@@ -18,6 +18,8 @@
   --color-border-light: #EEEEEE;
   --color-white: #FFFFFF;
   --color-pink: #FF6B8A;
+  --color-blush: #FBE4DD;
+  --color-blush-border: #f0c8be;
   --font-heading: 'Playfair Display', serif;
   --font-body: 'Playfair Display', serif;
   --border-radius: 6px;
@@ -1885,7 +1887,7 @@
    5. FAQ
    ================================================================= */
 .glowa-faq {
-  background: var(--color-bg);
+  background: var(--color-blush);
   padding: 64px 0;
 }
 
@@ -2041,10 +2043,10 @@
    6. FOOTER
    ================================================================= */
 .glowa-footer {
-  background: var(--color-white);
+  background: var(--color-blush);
   color: var(--color-text);
   padding: 56px 80px 28px;
-  border-top: 1px solid var(--color-border-light);
+  border-top: 1px solid var(--color-blush-border);
 }
 
 .glowa-footer__inner {
@@ -2094,12 +2096,12 @@
 
 .glowa-newsletter-form__field {
   position: relative;
-  background: var(--color-bg);
+  background: var(--color-white);
   border-radius: 8px;
   padding: 4px 4px 4px 14px;
   display: flex;
   align-items: center;
-  border: 1px solid var(--color-border-light);
+  border: 1px solid var(--color-blush-border);
 }
 
 .glowa-newsletter-form__field input {
