@@ -1143,7 +1143,8 @@
 }
 
 .glowa-testimonial--no-photo {
-  grid-template-columns: minmax(170px, 210px) 1fr;
+  grid-template-columns: minmax(150px, 180px) 1fr;
+  gap: 18px;
 }
 
 .glowa-testimonial--no-photo .glowa-testimonial__photo {
@@ -1152,9 +1153,9 @@
 }
 
 .glowa-testimonial--no-photo .glowa-testimonial__card {
-  margin-left: -14px;
-  margin-top: 16px;
-  margin-bottom: 16px;
+  margin-left: 0;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 .glowa-testimonial__placeholder {
@@ -1290,7 +1291,8 @@
     padding: 16px;
   }
   .glowa-testimonial--no-photo {
-    grid-template-columns: 110px 1fr;
+    grid-template-columns: 100px 1fr;
+    gap: 12px;
   }
 }
 
