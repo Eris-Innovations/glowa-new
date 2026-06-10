@@ -1933,11 +1933,17 @@
 .glowa-faq__media {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
-.glowa-faq__media img {
-  max-width: 200px;
+.glowa-faq__media img,
+.glowa-faq__media svg {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  object-fit: contain;
   margin: 0 auto;
+  display: block;
 }
 
 .glowa-accordion {

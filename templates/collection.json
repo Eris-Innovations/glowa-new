@@ -1,5 +1,52 @@
 {
   "sections": {
+    "featured-product": {
+      "type": "product-main",
+      "blocks": {
+        "trust-1": {
+          "type": "trust",
+          "settings": { "icon": "truck", "text": "Orders over $50 ship free" }
+        },
+        "trust-2": {
+          "type": "trust",
+          "settings": { "icon": "returns", "text": "30 day returns" }
+        },
+        "feature-1": {
+          "type": "feature",
+          "settings": { "text": "Free Shipping" }
+        },
+        "feature-2": {
+          "type": "feature",
+          "settings": { "text": "Money Guarantee" }
+        },
+        "feature-3": {
+          "type": "feature",
+          "settings": { "text": "Flexible Payment" }
+        },
+        "feature-4": {
+          "type": "feature",
+          "settings": { "text": "Online Support" }
+        },
+        "feature-5": {
+          "type": "feature",
+          "settings": { "text": "Return within 7 days" }
+        }
+      },
+      "block_order": ["trust-1", "trust-2", "feature-1", "feature-2", "feature-3", "feature-4", "feature-5"],
+      "settings": {
+        "show_badge": true,
+        "badge_text": "Selling fast!",
+        "badge_color": "#FF6B8A",
+        "fallback_title": "Beauty of Joseon Dynasty cream (50 ml)",
+        "fallback_price": "$79.00",
+        "fallback_size": "50ml",
+        "review_count": 3,
+        "shipping_text": "Shipping calculated at checkout.",
+        "description": "Beauty of Joseon Dynasty cream is a rich daily moisturizer that provides deep hydration while helping to nourish and maintain the skin's natural balance. Designed for everyday use, it helps improve skin comfort and creates an ideal, well-hydrated base for seamless makeup application.",
+        "urgency_text": "Hurry up, only [count] items left in stock.",
+        "stock_threshold": 10
+      }
+    },
     "collection-grid": {
       "type": "collection-grid",
       "settings": {
@@ -68,5 +115,5 @@
       }
     }
   },
-  "order": ["collection-grid", "marquee", "faq-section"]
+  "order": ["featured-product", "collection-grid", "marquee", "faq-section"]
 }

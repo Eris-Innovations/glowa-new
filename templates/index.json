@@ -19,8 +19,7 @@
     "bestsellers": {
       "type": "bestsellers",
       "settings": {
-        "banner_asset": "bestsellers-banner.png",
-        "banner_alt": "GLOWA bestseller products lineup",
+        "banner_asset": "",
         "tab_one_label": "Bestsellers",
         "tab_two_label": "New Releases",
         "bestsellers_collection": "bestsellers",

@@ -3,6 +3,7 @@
     "contact": {
       "type": "glowa-contact",
       "settings": {
+        "image_asset": "contact-store.png",
         "city": "New York",
         "address": "4b/39 James St, Fortitude Valley QLD 4006",
         "phone": "+391 (0)35 2568",

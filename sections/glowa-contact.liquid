@@ -20,6 +20,15 @@
             alt: section.settings.city | default: 'GLOWA store',
             class: 'glowa-contact__image'
         }}
+      {%- elsif section.settings.image_asset != blank -%}
+        <img
+          src="{{ section.settings.image_asset | asset_url }}"
+          alt="{{ section.settings.city | default: 'GLOWA store' | escape }}"
+          loading="lazy"
+          width="1200"
+          height="1600"
+          class="glowa-contact__image"
+        >
       {%- else -%}
         <div class="glowa-contact__placeholder" aria-hidden="true">
           <svg viewBox="0 0 600 700" preserveAspectRatio="xMidYMid slice" role="img">
@@ -153,6 +162,13 @@
       "type": "image_picker",
       "id": "image",
       "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "image_asset",
+      "label": "Image asset filename",
+      "info": "Falls back to this image inside the assets folder when no image is picked above. e.g. contact-store.png",
+      "default": "contact-store.png"
     },
     {
       "type": "header",
