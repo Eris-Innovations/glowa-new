@@ -950,20 +950,24 @@
 .glowa-promo-banner {
   position: relative;
   width: 100%;
-  padding: 28px 0;
+  padding: 0;
   overflow: hidden;
 }
 
 .glowa-promo-banner__container {
   position: relative;
+  max-width: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
 }
 
 .glowa-promo-banner__frame {
   position: relative;
   min-height: var(--glowa-promo-min-height, 360px);
-  border: 2px solid var(--glowa-promo-frame, #FFFFFF);
-  border-radius: 4px;
-  padding: 32px 36px;
+  border: 0;
+  border-radius: 0;
+  padding: 32px 56px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto 1fr auto;
@@ -1040,9 +1044,9 @@
 }
 
 @media (max-width: 768px) {
-  .glowa-promo-banner { padding: 16px 0; }
+  .glowa-promo-banner { padding: 0; }
   .glowa-promo-banner__frame {
-    padding: 22px 18px 18px;
+    padding: 22px 22px 22px;
     min-height: var(--glowa-promo-min-height, 320px);
   }
   .glowa-promo-banner__heading { font-size: 22px; }
