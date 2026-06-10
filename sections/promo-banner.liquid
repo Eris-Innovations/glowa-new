@@ -1,42 +1,46 @@
 {%- comment -%}
-  GLOWA — Promo banner.
-  Pink-to-peach gradient strip with an inset white frame.
-  Heading top-left, product placeholder cluster center-right, CTA bottom-right.
-  Reusable: works for "Best Sellers", "Coming Soon", "Limited Edition", etc.
+  GLOWA — Promo banner (interactive bestsellers hero).
+  Full-bleed image background with a soft scrim overlay,
+  decorative gold corner brackets, animated sparkles, a floating
+  "bestseller" badge, eyebrow + heading + subtitle, a stats strip
+  and a CTA with a sliding arrow.
 {%- endcomment -%}
 
 {%- liquid
-  assign gradient_start = section.settings.gradient_start | default: '#F5C5C0'
-  assign gradient_end = section.settings.gradient_end | default: '#E8C4B0'
-  assign min_height = section.settings.min_height | default: 360
-  assign cta_bg = section.settings.cta_bg | default: '#6B6428'
+  assign min_height = section.settings.min_height | default: 480
+  assign cta_bg = section.settings.cta_bg | default: '#B8960C'
   assign cta_color = section.settings.cta_color | default: '#FFFFFF'
   assign heading_color = section.settings.heading_color | default: '#1A1A1A'
-  assign frame_color = section.settings.frame_color | default: '#FFFFFF'
+  assign accent_color = section.settings.accent_color | default: '#B8960C'
+  assign text_color = section.settings.text_color | default: '#3F3A33'
+  assign overlay_color = section.settings.overlay_color | default: '#FBE4DD'
+  assign overlay_opacity = section.settings.overlay_opacity | default: 55
+  assign overlay_decimal = overlay_opacity | times: 0.01
+  assign content_align = section.settings.content_align | default: 'left'
 -%}
 
 <section
-  class="glowa-scope glowa-promo-banner"
+  class="glowa-scope glowa-promo-banner glowa-promo-banner--{{ content_align }}"
   style="
     --glowa-promo-min-height: {{ min_height }}px;
-    --glowa-promo-frame: {{ frame_color }};
+    --glowa-promo-accent: {{ accent_color }};
+    --glowa-promo-text: {{ text_color }};
+    --glowa-promo-overlay: {{ overlay_color }};
+    --glowa-promo-overlay-opacity: {{ overlay_decimal }};
+    --glowa-promo-cta-bg: {{ cta_bg }};
+    --glowa-promo-cta-color: {{ cta_color }};
+    --glowa-promo-heading: {{ heading_color }};
   "
 >
-  <div class="glowa-container glowa-promo-banner__container">
+  <div class="glowa-promo-banner__container">
     <div class="glowa-promo-banner__frame">
-      <h2
-        class="glowa-promo-banner__heading"
-        style="color: {{ heading_color }};"
-      >
-        {{ section.settings.heading | default: 'Our Best Sellers' }}
-      </h2>
-
+      {%- comment -%} Background image {%- endcomment -%}
       <div class="glowa-promo-banner__media" aria-hidden="true">
         {%- if section.settings.image != blank -%}
-          {{ section.settings.image | image_url: width: 1400 | image_tag:
+          {{ section.settings.image | image_url: width: 2200 | image_tag:
               loading: 'lazy',
-              widths: '600,900,1200,1400',
-              sizes: '(max-width: 768px) 100vw, 60vw',
+              widths: '800,1200,1600,2000,2200',
+              sizes: '100vw',
               alt: section.settings.heading,
               class: 'glowa-promo-banner__img'
           }}
@@ -45,78 +49,110 @@
             src="{{ section.settings.image_asset | asset_url }}"
             alt="{{ section.settings.heading | escape }}"
             loading="lazy"
-            width="1400"
-            height="660"
+            width="2200"
+            height="900"
             class="glowa-promo-banner__img"
           >
         {%- else -%}
-          {%- comment -%} Stylized 5-bottle silhouette cluster as placeholder {%- endcomment -%}
-          <svg
-            class="glowa-promo-banner__placeholder"
-            viewBox="0 0 600 280"
-            preserveAspectRatio="xMidYMax meet"
-          >
-            <defs>
-              <linearGradient id="glowaShelf-{{ section.id }}" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.65)"/>
-                <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
-              </linearGradient>
-            </defs>
-
-            <ellipse cx="300" cy="245" rx="220" ry="18" fill="rgba(0,0,0,0.07)"/>
-
-            <rect x="160" y="222" width="280" height="22" rx="2" fill="rgba(255,255,255,0.85)"/>
-            <rect x="160" y="218" width="280" height="6" fill="rgba(255,255,255,0.95)"/>
-            <rect x="160" y="222" width="280" height="22" rx="2" fill="url(#glowaShelf-{{ section.id }})"/>
-
-            <g opacity="0.92">
-              <rect x="68"  y="130" width="58"  height="92"  rx="6" fill="#E08A95"/>
-              <rect x="78"  y="120" width="38"  height="14"  rx="3" fill="#C57080"/>
-              <rect x="78"  y="170" width="38"  height="22"  rx="2" fill="#FFFFFF" opacity="0.85"/>
-              <text x="97" y="187" text-anchor="middle" font-family="Jost, sans-serif" font-size="11" font-weight="700" fill="#1A1A1A">10+</text>
-            </g>
-
-            <g opacity="0.95">
-              <path d="M150 222 L150 145 Q150 130 165 130 L195 130 Q210 130 210 145 L210 222 Z" fill="#FAF4EC"/>
-              <rect x="170" y="100" width="20" height="34" rx="3" fill="#E5D9C6"/>
-              <circle cx="180" cy="100" r="6" fill="#B8AB94"/>
-              <rect x="160" y="170" width="40" height="24" rx="2" fill="#FFFFFF" opacity="0.85"/>
-            </g>
-
-            <g opacity="0.95">
-              <path d="M232 222 L232 110 Q232 96 246 96 L274 96 Q288 96 288 110 L288 222 Z" fill="#F2EAD9"/>
-              <rect x="245" y="80" width="30" height="18" rx="3" fill="#D9CFB7"/>
-              <rect x="240" y="150" width="40" height="30" rx="2" fill="#FFFFFF" opacity="0.7"/>
-            </g>
-
-            <g opacity="0.95">
-              <ellipse cx="335" cy="222" rx="38" ry="6" fill="rgba(0,0,0,0.08)"/>
-              <rect x="305" y="170" width="60" height="52" rx="4" fill="#FAF4EC"/>
-              <rect x="305" y="170" width="60" height="10" fill="#E8E0CC"/>
-            </g>
-
-            <g opacity="0.95">
-              <path d="M385 222 L385 168 Q385 156 397 156 L427 156 Q439 156 439 168 L439 222 Z" fill="#F0D9B6"/>
-              <rect x="397" y="138" width="18" height="22" rx="3" fill="#FFFFFF"/>
-              <circle cx="406" cy="138" r="5" fill="#D6BFA2"/>
-              <rect x="395" y="180" width="34" height="20" rx="2" fill="#FFFFFF" opacity="0.7"/>
-            </g>
-
-            <rect x="450" y="195" width="90" height="50" fill="#FFFFFF" opacity="0.4"/>
-            <rect x="450" y="195" width="90" height="6" fill="#FFFFFF" opacity="0.8"/>
-          </svg>
+          <div class="glowa-promo-banner__placeholder" aria-hidden="true"></div>
         {%- endif -%}
       </div>
 
-      {%- if section.settings.cta_label != blank -%}
-        <a
-          href="{{ section.settings.cta_link | default: '#' }}"
-          class="glowa-promo-banner__cta"
-          style="background: {{ cta_bg }}; color: {{ cta_color }};"
-        >
-          {{ section.settings.cta_label }}
-        </a>
+      {%- comment -%} Soft scrim that fades from a tinted overlay on the
+         content side to fully transparent on the product side. {%- endcomment -%}
+      <div class="glowa-promo-banner__scrim" aria-hidden="true"></div>
+
+      {%- comment -%} Decorative gold corner brackets {%- endcomment -%}
+      <span class="glowa-promo-banner__bracket glowa-promo-banner__bracket--tl" aria-hidden="true"></span>
+      <span class="glowa-promo-banner__bracket glowa-promo-banner__bracket--tr" aria-hidden="true"></span>
+      <span class="glowa-promo-banner__bracket glowa-promo-banner__bracket--bl" aria-hidden="true"></span>
+      <span class="glowa-promo-banner__bracket glowa-promo-banner__bracket--br" aria-hidden="true"></span>
+
+      {%- comment -%} Animated sparkles {%- endcomment -%}
+      <svg class="glowa-promo-banner__sparkle glowa-promo-banner__sparkle--1" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2 L13.5 9.2 L20.7 10.7 L13.5 12.2 L12 19.4 L10.5 12.2 L3.3 10.7 L10.5 9.2 Z" fill="currentColor"/>
+      </svg>
+      <svg class="glowa-promo-banner__sparkle glowa-promo-banner__sparkle--2" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 4 L13 9 L18 10 L13 11 L12 16 L11 11 L6 10 L11 9 Z" fill="currentColor"/>
+      </svg>
+      <svg class="glowa-promo-banner__sparkle glowa-promo-banner__sparkle--3" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 5 L12.7 10 L17.7 10.7 L12.7 11.3 L12 16.3 L11.3 11.3 L6.3 10.7 L11.3 10 Z" fill="currentColor"/>
+      </svg>
+
+      {%- comment -%} Floating bestseller badge {%- endcomment -%}
+      {%- if section.settings.badge_label != blank -%}
+        <div class="glowa-promo-banner__badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="glowa-promo-banner__badge-icon" aria-hidden="true">
+            <path d="M12 2 L14.5 8.5 L21 9 L16 13.5 L17.5 20 L12 16.5 L6.5 20 L8 13.5 L3 9 L9.5 8.5 Z"
+                  fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+          </svg>
+          <span>{{ section.settings.badge_label }}</span>
+        </div>
       {%- endif -%}
+
+      {%- comment -%} Content panel {%- endcomment -%}
+      <div class="glowa-promo-banner__content">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="glowa-promo-banner__eyebrow">
+            <span class="glowa-promo-banner__eyebrow-line" aria-hidden="true"></span>
+            {{ section.settings.eyebrow }}
+          </span>
+        {%- endif -%}
+
+        <h2 class="glowa-promo-banner__heading">
+          {{ section.settings.heading | default: 'Our Best Sellers' }}
+        </h2>
+
+        {%- if section.settings.subtitle != blank -%}
+          <p class="glowa-promo-banner__subtitle">
+            {{ section.settings.subtitle }}
+          </p>
+        {%- endif -%}
+
+        {%- comment -%} Stats strip (visible only if at least one stat is set) {%- endcomment -%}
+        {%- assign has_stats = false -%}
+        {%- if section.settings.stat_1_value != blank or section.settings.stat_2_value != blank or section.settings.stat_3_value != blank -%}
+          {%- assign has_stats = true -%}
+        {%- endif -%}
+
+        {%- if has_stats -%}
+          <ul class="glowa-promo-banner__stats" role="list">
+            {%- if section.settings.stat_1_value != blank -%}
+              <li class="glowa-promo-banner__stat">
+                <span class="glowa-promo-banner__stat-value">{{ section.settings.stat_1_value }}</span>
+                <span class="glowa-promo-banner__stat-label">{{ section.settings.stat_1_label }}</span>
+              </li>
+            {%- endif -%}
+            {%- if section.settings.stat_2_value != blank -%}
+              <li class="glowa-promo-banner__stat">
+                <span class="glowa-promo-banner__stat-value">{{ section.settings.stat_2_value }}</span>
+                <span class="glowa-promo-banner__stat-label">{{ section.settings.stat_2_label }}</span>
+              </li>
+            {%- endif -%}
+            {%- if section.settings.stat_3_value != blank -%}
+              <li class="glowa-promo-banner__stat">
+                <span class="glowa-promo-banner__stat-value">{{ section.settings.stat_3_value }}</span>
+                <span class="glowa-promo-banner__stat-label">{{ section.settings.stat_3_label }}</span>
+              </li>
+            {%- endif -%}
+          </ul>
+        {%- endif -%}
+
+        {%- if section.settings.cta_label != blank -%}
+          <a
+            href="{{ section.settings.cta_link | default: '#' }}"
+            class="glowa-promo-banner__cta"
+          >
+            <span class="glowa-promo-banner__cta-label">{{ section.settings.cta_label }}</span>
+            <span class="glowa-promo-banner__cta-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M5 12 H19 M13 6 L19 12 L13 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="glowa-promo-banner__cta-shine" aria-hidden="true"></span>
+          </a>
+        {%- endif -%}
+      </div>
     </div>
   </div>
 </section>
@@ -128,48 +164,82 @@
   "class": "glowa-section-promo-banner",
   "settings": [
     {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Editor's picks"
+    },
+    {
       "type": "text",
       "id": "heading",
       "label": "Heading",
       "default": "Our Best Sellers"
     },
     {
-      "type": "color",
-      "id": "heading_color",
-      "label": "Heading color",
-      "default": "#1A1A1A"
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Hand-picked Korean skincare loved by thousands. Real glass-skin results — every single day."
+    },
+    {
+      "type": "text",
+      "id": "badge_label",
+      "label": "Floating badge label",
+      "default": "Top rated 2026"
+    },
+    {
+      "type": "select",
+      "id": "content_align",
+      "label": "Content alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
     },
     {
       "type": "header",
-      "content": "Background"
+      "content": "Stats strip"
     },
     {
-      "type": "color",
-      "id": "gradient_start",
-      "label": "Gradient start (left)",
-      "default": "#F5C5C0"
+      "type": "text",
+      "id": "stat_1_value",
+      "label": "Stat 1 — value",
+      "default": "4.9★"
     },
     {
-      "type": "color",
-      "id": "gradient_end",
-      "label": "Gradient end (right)",
-      "default": "#E8C4B0"
+      "type": "text",
+      "id": "stat_1_label",
+      "label": "Stat 1 — label",
+      "default": "12,400 reviews"
     },
     {
-      "type": "color",
-      "id": "frame_color",
-      "label": "Inset frame color",
-      "default": "#FFFFFF"
+      "type": "text",
+      "id": "stat_2_value",
+      "label": "Stat 2 — value",
+      "default": "200K+"
     },
     {
-      "type": "range",
-      "id": "min_height",
-      "label": "Minimum height",
-      "min": 240,
-      "max": 600,
-      "step": 20,
-      "unit": "px",
-      "default": 360
+      "type": "text",
+      "id": "stat_2_label",
+      "label": "Stat 2 — label",
+      "default": "Happy faces"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_value",
+      "label": "Stat 3 — value",
+      "default": "100%"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_label",
+      "label": "Stat 3 — label",
+      "default": "K-Beauty authentic"
     },
     {
       "type": "header",
@@ -178,8 +248,7 @@
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Product image (optional)",
-      "info": "Leave empty to show the placeholder product cluster."
+      "label": "Background image"
     },
     {
       "type": "text",
@@ -189,6 +258,58 @@
       "default": "bestsellers-banner.png"
     },
     {
+      "type": "range",
+      "id": "min_height",
+      "label": "Minimum height",
+      "min": 320,
+      "max": 720,
+      "step": 20,
+      "unit": "px",
+      "default": 480
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay tint",
+      "default": "#FBE4DD"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 55
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text color",
+      "default": "#3F3A33"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color (gold)",
+      "default": "#B8960C"
+    },
+    {
       "type": "header",
       "content": "CTA"
     },
@@ -196,7 +317,7 @@
       "type": "text",
       "id": "cta_label",
       "label": "Button label",
-      "default": "Shop Now"
+      "default": "Shop now"
     },
     {
       "type": "url",
@@ -207,7 +328,7 @@
       "type": "color",
       "id": "cta_bg",
       "label": "Button background",
-      "default": "#6B6428"
+      "default": "#B8960C"
     },
     {
       "type": "color",
@@ -221,14 +342,17 @@
       "name": "GLOWA Promo banner",
       "settings": {
         "heading": "Our Best Sellers",
-        "heading_color": "#1A1A1A",
-        "gradient_start": "#F5C5C0",
-        "gradient_end": "#E8C4B0",
-        "frame_color": "#FFFFFF",
-        "min_height": 360,
-        "cta_label": "Shop Now",
-        "cta_bg": "#6B6428",
-        "cta_color": "#FFFFFF"
+        "eyebrow": "Editor's picks",
+        "subtitle": "Hand-picked Korean skincare loved by thousands. Real glass-skin results — every single day.",
+        "badge_label": "Top rated 2026",
+        "content_align": "left",
+        "min_height": 480,
+        "overlay_color": "#FBE4DD",
+        "overlay_opacity": 55,
+        "cta_label": "Shop now",
+        "cta_bg": "#B8960C",
+        "cta_color": "#FFFFFF",
+        "accent_color": "#B8960C"
       }
     }
   ],
