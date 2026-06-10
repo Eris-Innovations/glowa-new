@@ -41,6 +41,15 @@
               alt: section.settings.heading,
               class: 'glowa-promo-banner__img'
           }}
+        {%- elsif section.settings.image_asset != blank -%}
+          <img
+            src="{{ section.settings.image_asset | asset_url }}"
+            alt="{{ section.settings.heading | escape }}"
+            loading="lazy"
+            width="1400"
+            height="660"
+            class="glowa-promo-banner__img"
+          >
         {%- else -%}
           {%- comment -%} Stylized 5-bottle silhouette cluster as placeholder {%- endcomment -%}
           <svg
@@ -172,6 +181,12 @@
       "id": "image",
       "label": "Product image (optional)",
       "info": "Leave empty to show the placeholder product cluster."
+    },
+    {
+      "type": "text",
+      "id": "image_asset",
+      "label": "Image — theme asset filename",
+      "info": "Falls back to this image inside the assets folder when no image is picked above. e.g. bestsellers-banner.png"
     },
     {
       "type": "header",

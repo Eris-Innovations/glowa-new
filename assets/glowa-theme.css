@@ -1124,12 +1124,13 @@
 
 .glowa-testimonial {
   display: grid;
-  grid-template-columns: minmax(220px, 250px) 1fr;
-  gap: 0;
-  flex: 0 0 calc(50% - 10px);
+  grid-template-columns: minmax(180px, 210px) minmax(0, 1fr);
+  gap: 18px;
+  flex: 0 0 calc(50% - 14px);
   scroll-snap-align: start;
   background: transparent;
   align-items: stretch;
+  position: relative;
 }
 
 .glowa-testimonial__photo {
@@ -1139,6 +1140,8 @@
   background: var(--color-bg);
   aspect-ratio: 0.75 / 1;
   box-shadow: inset 0 0 0 1px rgba(188, 168, 88, 0.08);
+  align-self: center;
+  z-index: 1;
 }
 
 .glowa-testimonial__photo img,
@@ -1154,14 +1157,17 @@
   background: #fffdfa;
   border: 1px solid rgba(188, 168, 88, 0.14);
   border-radius: 18px;
-  padding: 24px 24px 20px;
-  margin-left: -22px;
-  margin-top: 18px;
-  margin-bottom: 18px;
+  padding: 24px 26px 22px;
+  margin: 14px 0;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   box-shadow: 0 18px 40px rgba(69, 53, 18, 0.08);
+  min-width: 0;
+}
+
+.glowa-testimonial__card > * {
+  min-width: 0;
 }
 
 .glowa-testimonial--no-photo {
@@ -1249,6 +1255,8 @@
   line-height: 1.75;
   color: #4f4740;
   margin: 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .glowa-testimonial__product {
@@ -1303,13 +1311,12 @@
   .glowa-testimonials { padding: 44px 0 48px; }
   .glowa-testimonials__heading { font-size: 30px; }
   .glowa-testimonial {
-    grid-template-columns: 140px 1fr;
+    grid-template-columns: 130px minmax(0, 1fr);
+    gap: 12px;
     flex: 0 0 86%;
   }
   .glowa-testimonial__card {
-    margin-left: -12px;
-    margin-top: 12px;
-    margin-bottom: 12px;
+    margin: 8px 0;
     padding: 16px;
   }
   .glowa-testimonial--no-photo {

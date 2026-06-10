@@ -54,6 +54,7 @@
         "gradient_end": "#E8C4B0",
         "frame_color": "#FFFFFF",
         "min_height": 360,
+        "image_asset": "bestsellers-banner.png",
         "cta_label": "Shop Now",
         "cta_bg": "#CFBE79",
         "cta_color": "#FFFFFF"
