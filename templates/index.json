@@ -101,6 +101,9 @@
       },
       "block_order": ["t-1", "t-2"],
       "settings": {
+        "source_mode": "metaobjects",
+        "metaobject_type": "testimonial",
+        "max_items": 6,
         "heading_accent": "Customers",
         "heading_text": " love us.",
         "accent_color": "#B8960C"

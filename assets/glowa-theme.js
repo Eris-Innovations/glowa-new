@@ -138,13 +138,17 @@
     try { saved = JSON.parse(localStorage.getItem(KEY) || '[]'); }
     catch (e) { saved = []; }
 
-    document.querySelectorAll('.glowa-card__wishlist').forEach((btn) => {
+    document.querySelectorAll('.glowa-card__wishlist, .glowa-mini-card__wishlist, .glowa-product-card__wishlist').forEach((btn) => {
       const id = btn.dataset.productId;
-      if (id && saved.includes(id)) btn.classList.add('is-active');
+      if (id && saved.includes(id)) {
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-pressed', 'true');
+      }
 
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         btn.classList.toggle('is-active');
+        btn.setAttribute('aria-pressed', btn.classList.contains('is-active') ? 'true' : 'false');
         if (!id) return;
         if (btn.classList.contains('is-active')) {
           if (!saved.includes(id)) saved.push(id);

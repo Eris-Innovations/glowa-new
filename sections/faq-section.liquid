@@ -3,6 +3,13 @@
   Three columns: copy, product image, accordion.
 {%- endcomment -%}
 
+{%- liquid
+  assign contact_page_url = '/pages/contact'
+  if pages['contact'] != blank
+    assign contact_page_url = pages['contact'].url
+  endif
+-%}
+
 <section class="glowa-scope glowa-faq">
   <div class="glowa-container">
     <div class="glowa-faq__grid">
@@ -17,11 +24,11 @@
             <a href="{{ section.settings.help_url | default: '#' }}">{{ section.settings.help_label }}</a>
           {%- endif -%}
           {%- if section.settings.contact_label != blank -%}
-            <a href="{{ section.settings.contact_url | default: '/pages/contact' }}">{{ section.settings.contact_label }}</a>
+            <a href="{{ section.settings.contact_url | default: contact_page_url }}">{{ section.settings.contact_label }}</a>
           {%- endif -%}
         </div>
         {%- if section.settings.cta_label != blank -%}
-          <a href="{{ section.settings.cta_url | default: '#' }}" class="glowa-faq__cta">{{ section.settings.cta_label }}</a>
+          <a href="{{ section.settings.cta_url | default: contact_page_url }}" class="glowa-faq__cta">{{ section.settings.cta_label }}</a>
         {%- endif -%}
       </div>
 

@@ -127,8 +127,14 @@
               {%- assign rendered = rendered | plus: 1 -%}
               {%- assign cp_variant   = cp.selected_or_first_available_variant -%}
               {%- assign size_option  = cp.options_with_values.first -%}
-              {%- assign cp_rating    = cp.metafields.reviews.rating.value | default: '4.4' -%}
-              {%- assign cp_reviews   = cp.metafields.reviews.rating_count.value | default: cp.id | modulo: 5000 -%}
+              {%- assign cp_rating    = blank -%}
+              {%- assign cp_reviews   = blank -%}
+              {%- if cp.metafields.reviews.rating.value != blank -%}
+                {%- assign cp_rating = cp.metafields.reviews.rating.value.rating | default: cp.metafields.reviews.rating.value -%}
+              {%- endif -%}
+              {%- if cp.metafields.reviews.rating_count != blank -%}
+                {%- assign cp_reviews = cp.metafields.reviews.rating_count.value | default: cp.metafields.reviews.rating_count -%}
+              {%- endif -%}
 
               <article class="glowa-mini-card glowa-reveal" data-glowa-product>
                 <span class="glowa-mini-card__badge">{{ section.settings.card_badge | default: 'Bestseller' }}</span>
@@ -155,16 +161,14 @@
                   {%- endif -%}
                 </a>
 
-                <h3 class="glowa-mini-card__name"><a href="{{ cp.url }}">{{ cp.title }}</a></h3>
+                <h3 class="glowa-mini-card__name"><a href="{{ cp.url }}">{{ cp.title | truncate: 70 }}</a></h3>
 
-                <div class="glowa-mini-card__rating">
-                  <span class="glowa-stars" aria-hidden="true">★★★★</span><span class="glowa-stars glowa-stars--half" aria-hidden="true">★</span>
-                  <span class="glowa-mini-card__rating-value">{{ cp_rating }}</span>
-                  <span class="glowa-mini-card__review-count">({{ cp_reviews }})</span>
-                </div>
-
-                {%- if cp.tags.size > 0 -%}
-                  <p class="glowa-mini-card__tags">{{ cp.tags | join: ', ' | truncate: 50 }}</p>
+                {%- if cp_rating != blank -%}
+                  <div class="glowa-mini-card__rating">
+                    <span class="glowa-stars" aria-hidden="true">★★★★</span><span class="glowa-stars glowa-stars--half" aria-hidden="true">★</span>
+                    <span class="glowa-mini-card__rating-value">{{ cp_rating }}</span>
+                    {%- if cp_reviews != blank -%}<span class="glowa-mini-card__review-count">({{ cp_reviews }})</span>{%- endif -%}
+                  </div>
                 {%- endif -%}
 
                 <form method="post" action="{{ routes.cart_add_url }}" data-glowa-product-form>
@@ -237,8 +241,6 @@
                       <span class="glowa-mini-card__rating-value">{{ block.settings.rating | default: '4.4' }}</span>
                       <span class="glowa-mini-card__review-count">({{ block.settings.review_count | default: '2754' }})</span>
                     </div>
-
-                    <p class="glowa-mini-card__tags">{{ block.settings.tags | default: 'Oil Control, Brightens, Smooths' }}</p>
 
                     <div class="glowa-mini-card__meta">
                       <span class="glowa-mini-card__price">{{ block.settings.price | default: '$6.00 USD' }}</span>
