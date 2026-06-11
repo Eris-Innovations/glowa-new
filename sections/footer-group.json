@@ -9,14 +9,14 @@
           "type": "links",
           "settings": {
             "heading": "Shop",
-            "links": "Shop All\nSale\nLookbook\nBasic Collections"
+            "links": "Shop All|/collections/all\nBasic Collections|/collections"
           }
         },
         "care": {
           "type": "links",
           "settings": {
             "heading": "Customer care",
-            "links": "My Account\nContact\nFAQs\nSupport\nShipping and Returns"
+            "links": "My Account|/account\nContact|/pages/contact\nFAQs|/pages/faqs\nSupport|/pages/contact"
           }
         },
         "about": {
@@ -24,7 +24,7 @@
           "settings": {
             "heading": "About",
             "body": "We only carry designs we believe in ethically and aesthetically – original, authentic pieces that are made to last.",
-            "link_label": "Learn More"
+            "link_label": ""
           }
         },
         "social-facebook":  { "type": "social", "settings": { "network": "facebook"  } },
@@ -48,11 +48,14 @@
       "settings": {
         "newsletter_heading": "Subscribe to get 10% OFF",
         "newsletter_subtext": "Subscribe for store updates and discounts.",
-        "newsletter_fine_print": "By subscribing you agree to the Terms of Use & Privacy Policy",
+        "newsletter_fine_print": "By subscribing you agree to the Privacy Policy",
+        "terms_label": "",
+        "privacy_label": "Privacy Policy",
         "show_country": true,
         "country_flag": "🇶🇦",
         "country_text": "Qatar (Riyal)",
         "copyright": "© 2026 GLOWA.",
+        "legal_two_label": "",
         "show_payments": true,
         "payment_methods": "VISA, MC, AMEX, PP, DIN, DISC"
       }

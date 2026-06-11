@@ -54,17 +54,19 @@
      ------------------------------------------------------------- */
   function initSizeSelectors() {
     document.querySelectorAll('[data-glowa-size-group]').forEach((group) => {
-      const root = group.closest('[data-glowa-product]') || group.closest('.glowa-card') || document;
+      const root = group.closest('[data-glowa-product]') || group.closest('.glowa-card') || group.closest('.glowa-mini-card') || document;
       const labelEl = root.querySelector('[data-glowa-size-label]');
       const priceEl = root.querySelector('[data-glowa-price]');
       const variantIdInput = root.querySelector('[data-glowa-variant-id]');
       const ctaBtn = root.querySelector('[data-glowa-add-to-cart]');
       const buyBtn = root.querySelector('[data-glowa-buy-now]');
 
-      group.querySelectorAll('.glowa-size-options__button, .glowa-card__size').forEach((btn) => {
+      const SIZE_BTN_SELECTOR = '.glowa-size-options__button, .glowa-card__size, .glowa-mini-card__size';
+
+      group.querySelectorAll(SIZE_BTN_SELECTOR).forEach((btn) => {
         btn.addEventListener('click', (e) => {
           e.preventDefault();
-          group.querySelectorAll('.glowa-size-options__button, .glowa-card__size').forEach((b) =>
+          group.querySelectorAll(SIZE_BTN_SELECTOR).forEach((b) =>
             b.classList.remove('is-active')
           );
           btn.classList.add('is-active');
@@ -166,24 +168,44 @@
   function initNewsletter() {
     document.querySelectorAll('.glowa-newsletter-form').forEach((form) => {
       const input = form.querySelector('input[type="email"]');
-      const status = form.querySelector('.glowa-newsletter-form__status');
+      if (!input) return;
+
+      const ensureInlineError = () => {
+        let node = form.querySelector('.glowa-newsletter-form__inline-error');
+        if (!node) {
+          node = document.createElement('p');
+          node.className = 'glowa-newsletter-form__inline-error';
+          node.setAttribute('role', 'alert');
+          const field = form.querySelector('.glowa-newsletter-form__field');
+          if (field && field.parentNode) field.parentNode.insertBefore(node, field.nextSibling);
+        }
+        return node;
+      };
+
       form.addEventListener('submit', (e) => {
-        const value = (input && input.value || '').trim();
+        const value = (input.value || '').trim();
         const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
         if (!isValid) {
           e.preventDefault();
-          if (status) {
-            status.textContent = 'Please enter a valid email address.';
-            status.style.color = '#c62828';
-          }
-          return;
-        }
-        if (status) {
-          status.textContent = 'Thanks! Check your inbox for the 10% off code.';
-          status.style.color = 'var(--color-gold)';
+          const node = ensureInlineError();
+          node.textContent = 'Please enter a valid email address.';
+          input.focus();
         }
       });
+
+      input.addEventListener('input', () => {
+        const node = form.querySelector('.glowa-newsletter-form__inline-error');
+        if (node) node.textContent = '';
+      });
     });
+
+    const banner = document.querySelector('[data-glowa-newsletter-status]');
+    if (banner) {
+      try {
+        banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        banner.focus({ preventScroll: true });
+      } catch (_) { /* no-op */ }
+    }
   }
 
   /* -------------------------------------------------------------
@@ -410,7 +432,9 @@
         tmp.innerHTML = html.trim();
         const grid = tmp.querySelector('.glowa-recs__grid');
         const target = host.querySelector('.glowa-recs__grid');
-        if (grid && target) {
+        // Only swap when the API returned at least one card —
+        // otherwise keep the catalog fallback already on the page.
+        if (grid && target && grid.children.length > 0) {
           target.innerHTML = grid.innerHTML;
           initSizeSelectors();
           initWishlist();

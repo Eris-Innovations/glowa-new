@@ -8,6 +8,21 @@
   if pages['contact'] != blank
     assign contact_page_url = pages['contact'].url
   endif
+
+  assign faqs_page_url = '/pages/faqs'
+  if pages['faqs'] != blank
+    assign faqs_page_url = pages['faqs'].url
+  endif
+
+  assign help_link_url = section.settings.help_url
+  if help_link_url == blank
+    assign help_link_url = faqs_page_url
+  endif
+
+  assign cta_link_url = section.settings.cta_url
+  if cta_link_url == blank
+    assign cta_link_url = faqs_page_url
+  endif
 -%}
 
 <section class="glowa-scope glowa-faq">
@@ -21,14 +36,14 @@
         </p>
         <div class="glowa-faq__links">
           {%- if section.settings.help_label != blank -%}
-            <a href="{{ section.settings.help_url | default: '#' }}">{{ section.settings.help_label }}</a>
+            <a href="{{ help_link_url }}">{{ section.settings.help_label }}</a>
           {%- endif -%}
           {%- if section.settings.contact_label != blank -%}
             <a href="{{ section.settings.contact_url | default: contact_page_url }}">{{ section.settings.contact_label }}</a>
           {%- endif -%}
         </div>
         {%- if section.settings.cta_label != blank -%}
-          <a href="{{ section.settings.cta_url | default: contact_page_url }}" class="glowa-faq__cta">{{ section.settings.cta_label }}</a>
+          <a href="{{ cta_link_url }}" class="glowa-faq__cta">{{ section.settings.cta_label }}</a>
         {%- endif -%}
       </div>
 
@@ -113,7 +128,8 @@
     {
       "type": "url",
       "id": "help_url",
-      "label": "Help link URL"
+      "label": "Help link URL",
+      "info": "Leave empty to auto-link to /pages/faqs."
     },
     {
       "type": "text",
@@ -124,7 +140,8 @@
     {
       "type": "url",
       "id": "contact_url",
-      "label": "Contact link URL"
+      "label": "Contact link URL",
+      "info": "Leave empty to auto-link to /pages/contact."
     },
     {
       "type": "text",
@@ -135,7 +152,8 @@
     {
       "type": "url",
       "id": "cta_url",
-      "label": "CTA button URL"
+      "label": "CTA button URL",
+      "info": "Leave empty to auto-link to /pages/faqs."
     },
     {
       "type": "image_picker",

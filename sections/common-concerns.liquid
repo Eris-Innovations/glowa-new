@@ -17,8 +17,18 @@
     <div class="glowa-concerns__grid">
       {%- for block in section.blocks -%}
         {%- if block.type == 'concern' -%}
-          {%- assign target_url = block.settings.link | default: '#' -%}
-          <a class="glowa-concern glowa-reveal" href="{{ target_url }}" {{ block.shopify_attributes }}>
+          {%- assign target_url = block.settings.link -%}
+          {%- if target_url != blank -%}
+            {%- assign concern_tag = 'a' -%}
+          {%- else -%}
+            {%- assign concern_tag = 'div' -%}
+          {%- endif -%}
+
+          <{{ concern_tag }}
+            class="glowa-concern glowa-reveal"
+            {% if concern_tag == 'a' %}href="{{ target_url }}"{% endif %}
+            {{ block.shopify_attributes }}
+          >
             <div class="glowa-concern__media">
               {%- if block.settings.image != blank -%}
                 {{ block.settings.image | image_url: width: 600 | image_tag:
@@ -54,7 +64,7 @@
               {%- endif -%}
             </div>
             <span class="glowa-concern__label">{{ block.settings.label | default: 'Aging' }}</span>
-          </a>
+          </{{ concern_tag }}>
         {%- endif -%}
       {%- endfor -%}
     </div>

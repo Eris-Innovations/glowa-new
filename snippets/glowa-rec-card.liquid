@@ -1,27 +1,42 @@
 {% doc %}
-  Renders one GLOWA recommendation card.
+  Renders one GLOWA recommendation card using the same `glowa-mini-card`
+  markup that powers the Bestsellers grid — identical look, identical
+  size selector + AJAX add-to-cart behaviour.
 
   @param {product} card_product - The product to render.
   @param {string}  [badge_text] - Top-left badge label. Defaults to 'Bestseller'.
+  @param {number}  [card_index] - 0-based index used to pick a placeholder image.
+  @param {string}  [cta_label]  - CTA button label. Defaults to 'Add To Cart'.
 
   @example
-    {% render 'glowa-rec-card', card_product: prod, badge_text: 'Bestseller' %}
+    {% render 'glowa-rec-card', card_product: prod, badge_text: 'Bestseller', card_index: forloop.index0 %}
 {% enddoc %}
 
 {%- liquid
   assign cp = card_product
   assign cp_variant = cp.selected_or_first_available_variant
   assign size_option = cp.options_with_values.first
+
+  assign cp_rating = blank
+  assign cp_reviews = blank
+  if cp.metafields.reviews.rating.value != blank
+    assign cp_rating = cp.metafields.reviews.rating.value.rating | default: cp.metafields.reviews.rating.value
+  endif
+  if cp.metafields.reviews.rating_count != blank
+    assign cp_reviews = cp.metafields.reviews.rating_count.value | default: cp.metafields.reviews.rating_count
+  endif
+
+  assign placeholder_index = card_index | default: 0 | modulo: 6 | plus: 1
 -%}
 
-<article class="glowa-card glowa-reveal" data-glowa-product>
+<article class="glowa-mini-card glowa-reveal" data-glowa-product>
   {%- if badge_text != blank -%}
-    <span class="glowa-card__badge">{{ badge_text }}</span>
+    <span class="glowa-mini-card__badge">{{ badge_text }}</span>
   {%- endif -%}
 
   <button
     type="button"
-    class="glowa-card__wishlist"
+    class="glowa-mini-card__wishlist"
     aria-label="Add to wishlist"
     data-product-id="{{ cp.id }}"
   >
@@ -30,25 +45,24 @@
     </svg>
   </button>
 
-  <a href="{{ cp.url }}" class="glowa-card__media" aria-label="{{ cp.title | escape }}">
+  <a href="{{ cp.url }}" class="glowa-mini-card__media" aria-label="{{ cp.title | escape }}">
     {%- if cp.featured_image != blank -%}
-      {{ cp.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', widths: '300,600', alt: cp.title }}
+      {{ cp.featured_image | image_url: width: 400 | image_tag:
+          loading: 'lazy', widths: '200,400', alt: cp.title
+      }}
     {%- else -%}
-      {{ 'product-2' | placeholder_svg_tag: 'placeholder-svg' }}
+      {{ 'product-' | append: placeholder_index | placeholder_svg_tag: 'glowa-mini-card__placeholder-svg' }}
     {%- endif -%}
   </a>
 
-  <h3 class="glowa-card__name">
-    <a href="{{ cp.url }}">{{ cp.title }}</a>
-  </h3>
+  <h3 class="glowa-mini-card__name"><a href="{{ cp.url }}">{{ cp.title | truncate: 70 }}</a></h3>
 
-  <div class="glowa-card__rating">
-    <span class="glowa-stars">★★★★☆</span>
-    <span>{{ cp.metafields.reviews.rating.value | default: '4.4' }} ({{ cp.metafields.reviews.rating_count.value | default: cp.id | modulo: 5000 }})</span>
-  </div>
-
-  {%- if cp.tags.size > 0 -%}
-    <div class="glowa-card__tags">{{ cp.tags | join: ', ' | truncate: 60 }}</div>
+  {%- if cp_rating != blank -%}
+    <div class="glowa-mini-card__rating">
+      <span class="glowa-stars" aria-hidden="true">★★★★</span><span class="glowa-stars glowa-stars--half" aria-hidden="true">★</span>
+      <span class="glowa-mini-card__rating-value">{{ cp_rating }}</span>
+      {%- if cp_reviews != blank -%}<span class="glowa-mini-card__review-count">({{ cp_reviews }})</span>{%- endif -%}
+    </div>
   {%- endif -%}
 
   <form method="post" action="{{ routes.cart_add_url }}" data-glowa-product-form>
@@ -56,28 +70,28 @@
     <input type="hidden" name="id" value="{{ cp_variant.id }}" data-glowa-variant-id>
     <input type="hidden" name="quantity" value="1">
 
-    <div class="glowa-card__price-row">
-      <span class="glowa-card__price" data-glowa-price>{{ cp_variant.price | money }}</span>
-
+    <div class="glowa-mini-card__meta">
+      <span class="glowa-mini-card__price" data-glowa-price>{{ cp_variant.price | money }}</span>
       {%- if size_option != blank and size_option.values.size > 1 -%}
-        <span class="glowa-card__sizes" data-glowa-size-group>
-          {%- for v in cp.variants limit: 3 -%}
+        <span class="glowa-mini-card__sizes" data-glowa-size-group>
+          {%- for v in cp.variants limit: 2 -%}
             {%- assign opt_value = v.options.first -%}
             <button
               type="button"
-              class="glowa-card__size{% if v.id == cp_variant.id %} is-active{% endif %}"
+              class="glowa-mini-card__size{% if v.id == cp_variant.id %} is-active{% endif %}"
               data-value="{{ opt_value }}"
               data-variant-id="{{ v.id }}"
               data-price="{{ v.price | money }}"
               data-available="{{ v.available }}"
             >{{ opt_value }}</button>
+            {%- unless forloop.last -%}<span class="glowa-mini-card__sep" aria-hidden="true">|</span>{%- endunless -%}
           {%- endfor -%}
         </span>
       {%- endif -%}
     </div>
 
-    <button type="submit" class="glowa-card__cta" data-glowa-add-to-cart>
-      Add To Cart
+    <button type="submit" class="glowa-mini-card__cta" data-glowa-add-to-cart>
+      {{ cta_label | default: 'Add To Cart' }}
     </button>
   </form>
 </article>

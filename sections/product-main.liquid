@@ -5,16 +5,67 @@
 {%- endcomment -%}
 
 {%- liquid
-  assign p = product
+  comment
+    Resolve which product to feature, in priority order:
+      1. Merchant-picked product in section settings.
+      2. The current product (when on a product template).
+      3. A merchant-picked source collection's first product.
+      4. The store's first product from collections.all (fully dynamic).
+  endcomment
+  assign p = blank
   if section.settings.product != blank
     assign p = section.settings.product
+  elsif product != blank
+    assign p = product
+  elsif section.settings.source_collection != blank and section.settings.source_collection.products.first != blank
+    assign p = section.settings.source_collection.products.first
+  elsif collection != blank and collection.products.first != blank
+    assign p = collection.products.first
+  elsif collections.all.products.first != blank
+    assign p = collections.all.products.first
   endif
+
   assign current_variant = p.selected_or_first_available_variant
   assign size_option = p.options_with_values.first
   assign inventory = current_variant.inventory_quantity | default: 0
   assign show_urgency = false
   if current_variant.inventory_management != blank and inventory > 0 and inventory <= section.settings.stock_threshold
     assign show_urgency = true
+  endif
+
+  comment
+    Pull rating + review count from Shopify metafields when available.
+    Supported metafield types: number_decimal, single_line_text, rating, json.
+  endcomment
+  assign rating_value = blank
+  if p.metafields.reviews.rating.value != blank
+    if p.metafields.reviews.rating.value.rating != blank
+      assign rating_value = p.metafields.reviews.rating.value.rating
+    else
+      assign rating_value = p.metafields.reviews.rating.value
+    endif
+  endif
+
+  assign rating_count = blank
+  if p.metafields.reviews.rating_count.value != blank
+    assign rating_count = p.metafields.reviews.rating_count.value
+  endif
+
+  assign rating_for_stars = rating_value | default: 5 | times: 1.0
+  assign full_stars = rating_for_stars | floor
+  if full_stars > 5
+    assign full_stars = 5
+  endif
+  assign empty_stars = 5 | minus: full_stars
+
+  comment
+    Skip the size selector entirely if the product only has the default
+    Shopify variant ("Title: Default Title"), so the page doesn't render
+    a giant "Default Title" button for products without real options.
+  endcomment
+  assign show_options = true
+  if p.has_only_default_variant
+    assign show_options = false
   endif
 -%}
 
@@ -112,9 +163,17 @@
 
         <h1 class="glowa-product__title">{{ p.title | default: section.settings.fallback_title | default: 'Beauty of Joseon Dynasty cream (50 ml)' }}</h1>
 
-        <div class="glowa-product__rating" aria-label="Rated 5 out of 5">
-          <span class="glowa-stars" aria-hidden="true">★★★★★</span>
-          <span>({{ p.metafields.reviews.rating_count.value | default: section.settings.review_count }})</span>
+        {%- assign rating_label = rating_value | default: 5 -%}
+        <div class="glowa-product__rating" aria-label="Rated {{ rating_label }} out of 5">
+          <span class="glowa-stars" aria-hidden="true">
+            {%- for i in (1..full_stars) -%}★{%- endfor -%}
+            {%- for i in (1..empty_stars) -%}<span class="glowa-stars__empty">★</span>{%- endfor -%}
+          </span>
+          {%- if rating_count != blank -%}
+            <span>({{ rating_count }})</span>
+          {%- elsif section.settings.review_count > 0 and rating_value == blank -%}
+            <span>({{ section.settings.review_count }})</span>
+          {%- endif -%}
         </div>
 
         <div class="glowa-product__price" data-glowa-price>
@@ -167,7 +226,7 @@
             data-glowa-variant-id
           >
 
-          {%- if size_option != blank -%}
+          {%- if show_options and size_option != blank -%}
             <div class="glowa-product__option">
               <label class="glowa-product__option-label">
                 {{ size_option.name }}:
@@ -191,7 +250,7 @@
                 {%- endfor -%}
               </div>
             </div>
-          {%- else -%}
+          {%- elsif p == blank -%}
             <div class="glowa-product__option">
               <label class="glowa-product__option-label">
                 Size:
@@ -321,7 +380,13 @@
       "type": "product",
       "id": "product",
       "label": "Product",
-      "info": "Leave empty on a product template to use the current product."
+      "info": "Pick a specific product. If empty, the current product is used on product pages, otherwise the first product from the collection below (or your catalog) is shown."
+    },
+    {
+      "type": "collection",
+      "id": "source_collection",
+      "label": "Source collection",
+      "info": "When no product is picked above, the first product from this collection is featured. Falls back to your full catalog if empty."
     },
     {
       "type": "header",

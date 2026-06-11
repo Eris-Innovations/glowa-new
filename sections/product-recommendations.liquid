@@ -1,12 +1,16 @@
 {%- comment -%}
   GLOWA — Product recommendations.
 
-  Source priority:
+  Source priority (first match wins):
     1. A manually-picked collection (settings.collection).
-    2. Shopify's automatic recommendations API for the current product
-       (rendered when the section is loaded by /recommendations/products
-       and product is present).
-    3. Static fallback cards for the home page.
+    2. Shopify's automatic recommendations API (when the section is loaded
+       via /recommendations/products and `recommendations` is populated).
+    3. The catalog (collections.all.products) — keeps the grid populated
+       on fresh stores where recommendations data isn't available yet.
+    4. Static fallback cards configured as section blocks.
+
+  On product pages, JS still calls /recommendations/products and swaps in
+  personalized matches once Shopify has data.
 {%- endcomment -%}
 
 {%- liquid
@@ -18,7 +22,11 @@
     assign products_source = section.settings.collection.products
   elsif recommendations and recommendations.products_count > 0
     assign products_source = recommendations.products
-  elsif product
+  elsif collections.all.products.size > 0
+    assign products_source = collections.all.products
+  endif
+
+  if product and recommendations == blank
     assign needs_fetch = true
   endif
 -%}
@@ -37,8 +45,13 @@
         {%- assign count = 0 -%}
         {%- for prod in products_source -%}
           {%- if count >= max -%}{%- break -%}{%- endif -%}
+          {%- render 'glowa-rec-card',
+              card_product: prod,
+              badge_text: section.settings.badge_text,
+              card_index: count,
+              cta_label: section.settings.cta_label
+          -%}
           {%- assign count = count | plus: 1 -%}
-          {%- render 'glowa-rec-card', card_product: prod, badge_text: section.settings.badge_text -%}
         {%- endfor -%}
       {%- else -%}
         {%- for block in section.blocks -%}
@@ -120,6 +133,12 @@
       "id": "badge_text",
       "label": "Card badge text",
       "default": "Bestseller"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Card CTA label",
+      "default": "Add To Cart"
     }
   ],
   "blocks": [

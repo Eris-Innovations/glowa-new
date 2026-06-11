@@ -32,21 +32,71 @@
             </button>
           </div>
 
-          <p class="glowa-newsletter-form__fine">
-            {{- section.settings.fine_prefix | default: 'By subscribing you agree to the ' -}}
-            <a href="{{ section.settings.terms_url | default: '/policies/terms-of-service' }}">{{ section.settings.terms_label | default: 'Terms of Use' }}</a>
-            {{- section.settings.fine_separator | default: ' & ' -}}
-            <a href="{{ section.settings.privacy_url | default: '/policies/privacy-policy' }}">{{ section.settings.privacy_label | default: 'Privacy Policy' }}</a>
-            {{- section.settings.fine_suffix | default: '.' -}}
-          </p>
+          {%- liquid
+            assign terms_url = section.settings.terms_url
+            if terms_url == blank and shop.terms_of_service.url != blank
+              assign terms_url = shop.terms_of_service.url
+            endif
+            if terms_url == blank
+              assign terms_url = '/policies/terms-of-service'
+            endif
 
-          <p class="glowa-newsletter-form__status" role="status">
-            {%- if form.posted_successfully? -%}
-              Thanks for subscribing!
-            {%- elsif form.errors -%}
-              {{ form.errors | default_errors }}
-            {%- endif -%}
-          </p>
+            assign privacy_url_resolved = section.settings.privacy_url
+            if privacy_url_resolved == blank and shop.privacy_policy.url != blank
+              assign privacy_url_resolved = shop.privacy_policy.url
+            endif
+            if privacy_url_resolved == blank
+              assign privacy_url_resolved = '/policies/privacy-policy'
+            endif
+          -%}
+          {%- liquid
+            assign show_terms = false
+            if section.settings.terms_label != blank
+              assign show_terms = true
+            endif
+            assign show_privacy = false
+            if section.settings.privacy_label != blank
+              assign show_privacy = true
+            endif
+          -%}
+          {%- if show_terms or show_privacy -%}
+            <p class="glowa-newsletter-form__fine">
+              {{- section.settings.fine_prefix | default: 'By subscribing you agree to the ' -}}
+              {%- if show_terms -%}
+                <a href="{{ terms_url }}">{{ section.settings.terms_label }}</a>
+              {%- endif -%}
+              {%- if show_terms and show_privacy -%}
+                {{- section.settings.fine_separator | default: ' & ' -}}
+              {%- endif -%}
+              {%- if show_privacy -%}
+                <a href="{{ privacy_url_resolved }}">{{ section.settings.privacy_label }}</a>
+              {%- endif -%}
+              {{- section.settings.fine_suffix | default: '.' -}}
+            </p>
+          {%- endif -%}
+
+          {%- if form.posted_successfully? -%}
+            <div class="glowa-newsletter-form__status glowa-newsletter-form__status--success" role="status" tabindex="-1" data-glowa-newsletter-status>
+              <svg class="glowa-newsletter-form__status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 6 9 17l-5-5"/>
+              </svg>
+              <span class="glowa-newsletter-form__status-text">
+                <strong>You're subscribed to GLOWA.</strong>
+                <span>Check your inbox for your 10% off code.</span>
+              </span>
+            </div>
+          {%- elsif form.errors -%}
+            <div class="glowa-newsletter-form__status glowa-newsletter-form__status--error" role="alert" tabindex="-1" data-glowa-newsletter-status>
+              <svg class="glowa-newsletter-form__status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="13"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <span class="glowa-newsletter-form__status-text">
+                {{ form.errors | default_errors }}
+              </span>
+            </div>
+          {%- endif -%}
         {%- endform -%}
       </div>
 
@@ -60,11 +110,24 @@
                   <li><a href="{{ link.url }}">{{ link.title }}</a></li>
                 {%- endfor -%}
               {%- else -%}
+                {%- comment -%}
+                  Each line in the "Links" textarea can be either:
+                    Label                         → renders as label only (no link)
+                    Label|/path                   → renders as <a href="/path">Label</a>
+                    Label|https://example.com     → external links work too
+                {%- endcomment -%}
                 {%- assign items = block.settings.links | newline_to_br | split: '<br />' -%}
                 {%- for item in items -%}
                   {%- assign trimmed = item | strip -%}
                   {%- if trimmed != blank -%}
-                    <li><a href="#">{{ trimmed }}</a></li>
+                    {%- assign parts = trimmed | split: '|' -%}
+                    {%- assign link_label = parts[0] | strip -%}
+                    {%- assign link_url = parts[1] | strip -%}
+                    {%- if link_url != blank -%}
+                      <li><a href="{{ link_url }}">{{ link_label }}</a></li>
+                    {%- else -%}
+                      <li><span>{{ link_label }}</span></li>
+                    {%- endif -%}
                   {%- endif -%}
                 {%- endfor -%}
               {%- endif -%}
@@ -111,9 +174,6 @@
               {%- endform -%}
             {%- else -%}
               <span class="glowa-footer__country-text">{{ section.settings.country_text | default: 'Qatar (Riyal)' }}</span>
-              <svg class="glowa-footer__country-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
             {%- endif -%}
           </div>
         {%- endif -%}
@@ -151,13 +211,41 @@
           {%- endfor -%}
         </ul>
 
+        {%- liquid
+          assign legal_one_url = section.settings.legal_one_url
+          if legal_one_url == blank and shop.privacy_policy.url != blank
+            assign legal_one_url = shop.privacy_policy.url
+          endif
+          if legal_one_url == blank
+            assign legal_one_url = '/policies/privacy-policy'
+          endif
+
+          assign legal_two_url = section.settings.legal_two_url
+          if legal_two_url == blank and shop.terms_of_service.url != blank
+            assign legal_two_url = shop.terms_of_service.url
+          endif
+          if legal_two_url == blank
+            assign legal_two_url = '/policies/terms-of-service'
+          endif
+
+          assign legal_three_url = section.settings.legal_three_url
+          if legal_three_url == blank and shop.refund_policy.url != blank
+            assign legal_three_url = shop.refund_policy.url
+          endif
+          if legal_three_url == blank
+            assign legal_three_url = '/policies/refund-policy'
+          endif
+        -%}
         <div class="glowa-footer__legal-row">
           <div class="glowa-footer__legal">
             {%- if section.settings.legal_one_label != blank -%}
-              <a href="{{ section.settings.legal_one_url | default: '/policies/privacy-policy' }}">{{ section.settings.legal_one_label }}</a>
+              <a href="{{ legal_one_url }}">{{ section.settings.legal_one_label }}</a>
             {%- endif -%}
             {%- if section.settings.legal_two_label != blank -%}
-              <a href="{{ section.settings.legal_two_url | default: '/policies/terms-of-service' }}">{{ section.settings.legal_two_label }}</a>
+              <a href="{{ legal_two_url }}">{{ section.settings.legal_two_label }}</a>
+            {%- endif -%}
+            {%- if section.settings.legal_three_label != blank -%}
+              <a href="{{ legal_three_url }}">{{ section.settings.legal_three_label }}</a>
             {%- endif -%}
           </div>
 
@@ -261,7 +349,8 @@
     {
       "type": "url",
       "id": "terms_url",
-      "label": "Terms link URL"
+      "label": "Terms link URL",
+      "info": "Leave empty to auto-link to your Shopify Terms of Service policy."
     },
     {
       "type": "text",
@@ -278,7 +367,8 @@
     {
       "type": "url",
       "id": "privacy_url",
-      "label": "Privacy link URL"
+      "label": "Privacy link URL",
+      "info": "Leave empty to auto-link to your Shopify Privacy Policy."
     },
     {
       "type": "text",
@@ -322,7 +412,8 @@
     {
       "type": "url",
       "id": "legal_one_url",
-      "label": "Legal link 1 — URL"
+      "label": "Legal link 1 — URL",
+      "info": "Leave empty to auto-link to your Shopify Privacy Policy."
     },
     {
       "type": "text",
@@ -333,7 +424,20 @@
     {
       "type": "url",
       "id": "legal_two_url",
-      "label": "Legal link 2 — URL"
+      "label": "Legal link 2 — URL",
+      "info": "Leave empty to auto-link to your Shopify Terms of Service policy."
+    },
+    {
+      "type": "text",
+      "id": "legal_three_label",
+      "label": "Legal link 3 — label",
+      "default": "Refund Policy"
+    },
+    {
+      "type": "url",
+      "id": "legal_three_url",
+      "label": "Legal link 3 — URL",
+      "info": "Leave empty to auto-link to your Shopify Refund Policy."
     },
     {
       "type": "checkbox",
@@ -394,7 +498,7 @@
           "type": "text",
           "id": "link_label",
           "label": "Link label",
-          "default": "Learn More"
+          "info": "Leave empty to hide the link entirely."
         },
         {
           "type": "url",
@@ -446,6 +550,7 @@
         "copyright": "© 2026 GLOWA.",
         "legal_one_label": "Privacy Policy",
         "legal_two_label": "Terms of Service",
+        "legal_three_label": "Refund Policy",
         "show_payments": true,
         "payment_methods": "visa, mc, amex, pp, din, disc"
       },
